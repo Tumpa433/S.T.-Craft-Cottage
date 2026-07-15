@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloom Nest - Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-seedling"></i>
+                Bloom<span>Nest</span>
+            </a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="products.html">Products</a>
+                <a href="cart.html" class="active">Cart <span class="cart-badge" id="navCartBadge">0</span></a>
+                <a href="contact.html">Contact</a>
+                <a href="products.html" class="nav-cta">Order Now</a>
+            </nav>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== PAGE HEADER ===== -->
+    <section class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-shopping-cart"></i> Your Prayer Cart</h1>
+            <p>Review your offerings before placing the order</p>
+        </div>
+    </section>
+
+    <!-- ===== CART SECTION ===== -->
+    <section class="cart-section">
+        <div class="container">
+            <div class="cart-container" id="cartContainer">
+                <div class="cart-left">
+                    <div class="cart-items" id="cartPageItems">
+                        <div class="cart-empty">
+                            <i class="fas fa-basket-shopping"></i>
+                            <p>Your cart is empty. Add some divine flowers!</p>
+                            <a href="products.html" class="btn-primary">
+                                <i class="fas fa-shopping-bag"></i> Browse Flowers
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cart-right">
+                    <div class="checkout-form" id="checkoutForm" style="display:none;">
+                        <h3><i class="fas fa-truck-fast"></i> Delivery Details</h3>
+                        <div class="form-group">
+                            <label for="orderName">Full Name *</label>
+                            <input type="text" id="orderName" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderPhone">Phone Number *</label>
+                            <input type="tel" id="orderPhone" placeholder="WhatsApp Number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderAddress">Full Delivery Address *</label>
+                            <textarea id="orderAddress" rows="3" placeholder="House No, Street, Landmark" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderNotes">Special Instructions (Optional)</label>
+                            <input type="text" id="orderNotes" placeholder="e.g. Leave at door">
+                        </div>
+                    </div>
+
+                    <div class="cart-summary" id="cartSummary" style="display:none;">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="cartSubtotal">₹0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Delivery</span>
+                            <span id="cartDelivery">₹0</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="cartTotalAmount">₹0</span>
+                        </div>
+                        <div class="cart-actions">
+                            <!-- <button class="btn-locate" id="cartLocateBtn" style="width:100%; justify-content:center; margin-bottom: 10px;">
+                                <i class="fas fa-crosshairs"></i> Detect Location (for Free Delivery)
+                            </button> -->
+                            <button class="btn-secondary" id="clearCartBtn" style="width:100%; justify-content:center; margin-bottom: 10px;">
+                                <i class="fas fa-trash"></i> Clear Cart
+                            </button>
+                            <button class="btn-whatsapp" id="whatsappBtn" disabled style="width:100%; justify-content:center;">
+                                <i class="fab fa-whatsapp"></i> Place Order
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-seedling"></i> Bloom Nest</h3>
+                    <p>Fresh, fragrant flowers for your daily worship. Delivered with devotion.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +91 96747 24587</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +91 70032 19312</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> info@bloom-nest.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 Bloom Nest — Made with <i class="fas fa-heart" style="color:#E8B84B;"></i> for the divine.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloom Nest - Divine Flower Offerings</title>
+    <meta name="description" content="Fresh flowers for worship. Order online with free delivery within 1km." />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-seedling"></i>
+                Bloom<span>Nest</span>
+            </a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html" class="active">Home</a>
+                <a href="products.html">Products</a>
+                <a href="cart.html">Cart <span class="cart-badge" id="navCartBadge">0</span></a>
+                <a href="contact.html">Contact</a>
+                <a href="products.html" class="nav-cta">Order Now</a>
+            </nav>
+            
+            <div class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <h1>
+                        Fresh Flowers for<br />
+                        <span class="highlight">Divine Worship</span>
+                    </h1>
+                    <p>
+                        Handpicked, fragrant blooms for your daily prayers and
+                        special rituals. Free delivery within 1km.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="products.html" class="btn-primary">
+                            <i class="fas fa-shopping-bag"></i> Order Now
+                        </a>
+                        <a href="#location-bar" class="btn-secondary">
+                            <i class="fas fa-location-dot"></i> Check Delivery
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <h3>50+</h3>
+                            <p>Fresh Varieties</p>
+                        </div>
+                        <div class="stat">
+                            <h3>1km</h3>
+                            <p>Free Delivery</p>
+                        </div>
+                        <div class="stat">
+                            <h3>⭐ 4.9</h3>
+                            <p>Devotee Rating</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="flower-ring">
+                        <i class="fas fa-lotus"></i>
+                    </div>
+                    <div class="badge">
+                        <i class="fas fa-truck-fast"></i> Free Delivery *
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Bar (Hidden for now)
+            <div class="location-bar" id="location-bar">
+                <div class="loc-info">
+                    <i class="fas fa-location-dot"></i>
+                    <div>
+                        <div class="status" id="locationStatus">
+                            <span class="highlight">📍</span> Check your delivery eligibility
+                        </div>
+                        <div class="sub" id="locationSub">We deliver free within 1km of our shop</div>
+                    </div>
+                </div>
+                <div class="loc-actions">
+                    <span class="distance-badge checking" id="distanceBadge">
+                        <i class="fas fa-circle-notch fa-spin"></i> Check
+                    </span>
+                    <button class="btn-locate" id="locateBtn">
+                        <i class="fas fa-crosshairs"></i> Detect Location
+                    </button>
+                </div>
+            </div>
+            -->
+        </div>
+    </section>
+
+    <!-- ===== FEATURED PRODUCTS ===== -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-pray"></i> Featured Offerings</h2>
+                <p>Choose from our fresh, devotionally offered flowers</p>
+                <a href="products.html" class="view-all-btn">
+                    View All Products <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="product-grid" id="featuredProducts">
+                <!-- Products injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== WHY CHOOSE US ===== -->
+    <section class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-heart"></i> Why Choose Bloom Nest</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3>100% Fresh Flowers</h3>
+                    <p>Handpicked daily from local farms, delivered fresh to your doorstep.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-truck"></i>
+                    <h3>Free Delivery 1km</h3>
+                    <p>Free delivery within 1km radius. Fast and reliable service.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-praying-hands"></i>
+                    <h3>Blessed Offerings</h3>
+                    <p>Each flower is offered with devotion and prayers for your rituals.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-whatsapp"></i>
+                    <h3>WhatsApp Orders</h3>
+                    <p>Easy ordering via WhatsApp. Get confirmation instantly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-star"></i> Devotee Love</h2>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"The freshest flowers I've ever received for my morning puja. Divine fragrance!"</blockquote>
+                    <div class="author">— Priya Sharma</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"Free delivery within 1km is a blessing. Always on time, always fresh."</blockquote>
+                    <div class="author">— Rajesh Kumar</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <blockquote>"The marigold garlands are stunning. My temple looks beautiful every day."</blockquote>
+                    <div class="author">— Ananya Reddy</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-seedling"></i> Bloom Nest</h3>
+                    <p>Fresh, fragrant flowers for your daily worship. Delivered with devotion.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +91 96747 24587</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +91 70032 19312</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> info@bloom-nest.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 Bloom Nest — Made with <i class="fas fa-heart" style="color:#E8B84B;"></i> for the divine.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== TOAST CONTAINER ===== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
