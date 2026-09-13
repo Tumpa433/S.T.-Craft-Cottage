@@ -1,5 +1,5 @@
 /* ============================================
-   BLOOM NEST - Global Styles
+    S.T. CRAFT COTTAGE - Global Styles
    ============================================ */
 
 :root {
@@ -694,6 +694,17 @@ ul { list-style: none; }
     gap: 12px;
     margin-bottom: 20px;
 }
+.cart-review-title { margin-bottom: 16px; font-family: var(--font-serif); font-size: 1.45rem; color: var(--dark); }
+.cart-review-title i { margin-right: 8px; color: var(--primary); }
+.last-order-overview { margin-top: 28px; padding: 24px; background: #e8eee8; border: 1px solid rgba(32,45,43,0.12); border-radius: 5px; }
+.last-order-overview h2 { margin-bottom: 4px; font-family: var(--font-serif); color: var(--dark); }
+.last-order-overview h2 i { margin-right: 8px; color: #3b8b5a; }
+.last-order-date, .last-order-note { color: var(--text-muted); font-size: 0.8rem; }
+.last-order-items { margin: 16px 0; }
+.last-order-item, .last-order-total { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid rgba(32,45,43,0.12); }
+.last-order-item small { display: block; margin-top: 3px; color: var(--text-muted); font-size: 0.75rem; }
+.last-order-total { border-bottom: 0; font-weight: 700; font-size: 1.1rem; }
+.last-order-total strong { color: var(--primary); }
 .cart-item {
     display: flex;
     justify-content: space-between;
@@ -714,6 +725,7 @@ ul { list-style: none; }
     min-width: 28px;
 }
 .cart-item .item-info .name { font-weight: 500; }
+.cart-item .item-info .name small { display: block; margin-top: 3px; color: var(--text-muted); font-size: 0.74rem; font-weight: 400; line-height: 1.35; }
 .cart-item .item-price {
     font-weight: 600;
     color: var(--dark-soft);
@@ -1033,6 +1045,13 @@ ul { list-style: none; }
 }
 
 @media (max-width: 420px) {
+    .container { width: 100%; }
+    .hero-grid { width: 100%; min-width: 0; }
+    .hero-grid > * { min-width: 0; }
+    .hero-content, .hero-image { min-width: 0; max-width: 100%; }
+    .hero-stats { gap: 12px; flex-wrap: wrap; }
+    .hero-stats .stat { flex: 1 1 70px; min-width: 0; }
+    .hero-stats .stat p { overflow-wrap: anywhere; }
     .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
     .product-card h3 { font-size: 1rem; }
     .product-card .price { font-size: 1rem; }
@@ -1139,3 +1158,116 @@ ul { list-style: none; }
     transform: none;
     background: #999;
 }
+
+/* ============================================
+   S.T. CRAFT COTTAGE THEME
+   ============================================ */
+:root {
+    --primary: #c45136;
+    --primary-dark: #963722;
+    --gold: #e4a72d;
+    --gold-light: #f2dfb0;
+    --cream: #f8f0e4;
+    --warm-white: #fffdf8;
+    --dark: #202d2b;
+    --dark-soft: #48534e;
+    --text-muted: #7a8078;
+    --shadow: 0 12px 34px rgba(32, 45, 43, 0.1);
+    --shadow-hover: 0 20px 46px rgba(32, 45, 43, 0.16);
+    --radius: 8px;
+    --radius-sm: 5px;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Inter', sans-serif;
+}
+
+body { background: var(--warm-white); }
+.header { background: rgba(255, 253, 248, 0.94); border-bottom-color: rgba(32, 45, 43, 0.12); }
+.logo { letter-spacing: -0.02em; }
+.logo i { color: var(--primary); }
+.nav-links a::after { background: var(--primary); }
+.nav-cta, .btn-primary { border-radius: 4px; }
+.hero {
+    min-height: 92vh;
+    background: linear-gradient(120deg, #fffaf1 0%, #f5e8d5 58%, #dbe4dc 100%);
+}
+.hero::after {
+    content: 'SLOW  MADE  /  SMALL  BATCH';
+    position: absolute;
+    right: 4%;
+    bottom: 12%;
+    color: rgba(32, 45, 43, 0.35);
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
+    writing-mode: vertical-rl;
+}
+.hero-content h1 { letter-spacing: -0.04em; }
+.hero-content h1 .highlight { color: var(--primary); }
+.hero-content h1 .highlight::after { background: var(--gold); opacity: 0.65; height: 7px; bottom: 6px; }
+.btn-primary { box-shadow: 0 8px 20px rgba(196, 81, 54, 0.22); }
+.btn-secondary { border-radius: 4px; border-color: var(--dark); }
+.hero-image .flower-ring {
+    width: min(520px, 100%);
+    height: auto;
+    aspect-ratio: 4 / 3;
+    border-radius: 48% 48% 6px 6px;
+    background: #f4e8d8;
+    box-shadow: 22px 22px 0 rgba(228, 167, 45, 0.35);
+    animation: float 7s ease-in-out infinite;
+    overflow: hidden;
+}
+.hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+.hero-image .flower-ring::before { content: '✦'; color: var(--gold); top: 7%; left: 9%; }
+.hero-image .flower-ring::after { content: 'handmade'; color: #fff; font-family: var(--font-serif); font-size: 1.2rem; bottom: 8%; right: 9%; }
+.hero-art-label { position: relative; z-index: 2; color: #fff; text-align: center; font-size: 0.72rem; letter-spacing: 0.35em; line-height: 1.9; text-shadow: 0 2px 16px rgba(0,0,0,0.35); }
+.hero-art-label strong { color: var(--gold); font-size: 2.8rem; letter-spacing: 0.06em; }
+.hero-image .badge { border-radius: 4px; color: var(--dark); }
+.hero-image { flex-direction: column; }
+.hero-image .badge { position: static; margin-top: 16px; animation: none; }
+.products { background: var(--warm-white); }
+.section-header h2, .page-header h1 { letter-spacing: -0.03em; }
+.section-header h2 i, .page-header h1 i { color: var(--primary); }
+.product-card { border-radius: 5px; background: #fff; border-color: rgba(32,45,43,0.1); }
+.product-card .icon { display: grid; place-items: center; width: 100%; height: 150px; margin: -24px 0 18px; background: linear-gradient(135deg, #f4e8d8, #e7eee7); font-size: 4.2rem; }
+.product-card img.product-image { width: 100%; max-width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; background: #f4e8d8; }
+.product-gallery { margin: -24px 0 18px; }
+.product-gallery { width: 100%; max-width: 100%; }
+.product-gallery .product-image { display: grid; margin: 0; }
+.product-thumbnails { display: flex; gap: 6px; padding: 8px 10px 0; justify-content: center; background: #fff; }
+.product-thumbnail { width: 42px; height: 42px; padding: 0; border: 2px solid transparent; border-radius: 3px; overflow: hidden; opacity: 0.65; transition: var(--transition); }
+.product-thumbnail:hover, .product-thumbnail.active { border-color: var(--primary); opacity: 1; }
+.product-thumbnail img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.product-card::before { background: var(--primary); }
+.product-card h3 { color: var(--dark); }
+.product-card .price { color: var(--primary); }
+.variant-area { margin: 12px 0 8px; text-align: left; }
+.variant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.variant-label { display: block; margin-bottom: 5px; color: var(--text-muted); font-size: 0.72rem; font-weight: 600; }
+.product-variant, .product-color { width: 100%; padding: 9px 10px; border: 1px solid rgba(32,45,43,0.2); border-radius: 4px; background: var(--warm-white); color: var(--dark); font: inherit; font-size: 0.78rem; }
+.product-variant:focus, .product-color:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.cart-item .name small { display: block; margin-top: 2px; color: var(--text-muted); font-size: 0.74rem; font-weight: 400; }
+.btn-add, .filter-btn { border-radius: 4px; }
+.btn-add { background: var(--dark); color: #fff; }
+.btn-add:hover { background: var(--primary); }
+.btn-add.in-cart small { display: block; margin-top: 2px; font-size: 0.68rem; font-weight: 500; }
+.filter-btn { border: 1px solid rgba(32,45,43,0.15); background: #fff; }
+.filter-btn.active { background: var(--dark); border-color: var(--dark); color: #fff; }
+.features { background: #e8eee8; }
+.feature-card { border-radius: 5px; background: rgba(255,253,248,0.7); }
+.feature-card i { color: var(--primary); }
+.testimonials { background: #fffaf1; }
+.testimonial-card { border-radius: 5px; background: #fff; }
+.page-header { background: linear-gradient(120deg, #f5e8d5, #dbe4dc); }
+.page-header h1 i { color: var(--primary); }
+
+@media (max-width: 640px) {
+    .product-grid { grid-template-columns: minmax(0, 1fr); }
+    .product-card { width: 100%; min-width: 0; }
+    .product-card .icon, .product-card img.product-image { height: auto; min-height: 150px; max-height: 260px; }
+}
+.cart-container { border-radius: 5px; }
+.checkout-form { border-radius: 5px; }
+.delivery-note { margin-top: 14px; color: var(--text-muted); font-size: 0.76rem; line-height: 1.5; }
+.cart-item { border-radius: 4px; border-left-color: var(--primary); }
+.contact-form, .contact-info { padding: 28px; background: #f8f0e4; border-radius: 5px; }
+.contact-form h2, .contact-info h2 { color: var(--dark); }
+.footer { background: var(--dark); border-top-color: var(--gold); }

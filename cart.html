@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bloom Nest - Cart</title>
+    <title>S.T. Craft Cottage - Your basket</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -17,7 +17,7 @@
         <div class="container">
             <a href="index.html" class="logo">
                 <i class="fas fa-seedling"></i>
-                Bloom<span>Nest</span>
+                S.T. <span>Craft Cottage</span>
             </a>
 
             <nav class="nav-links" id="navLinks">
@@ -37,8 +37,8 @@
     <!-- ===== PAGE HEADER ===== -->
     <section class="page-header">
         <div class="container">
-            <h1><i class="fas fa-shopping-cart"></i> Your Prayer Cart</h1>
-            <p>Review your offerings before placing the order</p>
+            <h1><i class="fas fa-shopping-basket"></i> Your basket</h1>
+            <p>Review your handmade finds before placing your order.</p>
         </div>
     </section>
 
@@ -47,12 +47,13 @@
         <div class="container">
             <div class="cart-container" id="cartContainer">
                 <div class="cart-left">
+                    <h2 class="cart-review-title"><i class="fas fa-list-check"></i> Order review</h2>
                     <div class="cart-items" id="cartPageItems">
                         <div class="cart-empty">
                             <i class="fas fa-basket-shopping"></i>
-                            <p>Your cart is empty. Add some divine flowers!</p>
+                            <p>Your basket is waiting for something handmade.</p>
                             <a href="products.html" class="btn-primary">
-                                <i class="fas fa-shopping-bag"></i> Browse Flowers
+                                <i class="fas fa-store"></i> Browse the collection
                             </a>
                         </div>
                     </div>
@@ -60,7 +61,7 @@
                 
                 <div class="cart-right">
                     <div class="checkout-form" id="checkoutForm" style="display:none;">
-                        <h3><i class="fas fa-truck-fast"></i> Delivery Details</h3>
+                        <h3><i class="fas fa-truck-fast"></i> Delivery details</h3>
                         <div class="form-group">
                             <label for="orderName">Full Name *</label>
                             <input type="text" id="orderName" placeholder="Your Name" required>
@@ -93,9 +94,7 @@
                             <span id="cartTotalAmount">₹0</span>
                         </div>
                         <div class="cart-actions">
-                            <!-- <button class="btn-locate" id="cartLocateBtn" style="width:100%; justify-content:center; margin-bottom: 10px;">
-                                <i class="fas fa-crosshairs"></i> Detect Location (for Free Delivery)
-                            </button> -->
+                            <p class="delivery-note">* Free delivery is available within 1 km. Enter your complete address; S.T. Craft Cottage will confirm eligibility manually. No location access is required.</p>
                             <button class="btn-secondary" id="clearCartBtn" style="width:100%; justify-content:center; margin-bottom: 10px;">
                                 <i class="fas fa-trash"></i> Clear Cart
                             </button>
@@ -106,6 +105,7 @@
                     </div>
                 </div>
             </div>
+            <div class="last-order-overview" id="lastOrderOverview" style="display:none;"></div>
         </div>
     </section>
 
@@ -114,8 +114,8 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <h3><i class="fas fa-seedling"></i> Bloom Nest</h3>
-                    <p>Fresh, fragrant flowers for your daily worship. Delivered with devotion.</p>
+                    <h3><i class="fas fa-leaf"></i> S.T. Craft Cottage</h3>
+                    <p>Handmade jewellery, decor and little joys, made thoughtfully in small batches.</p>
                 </div>
                 <div class="footer-links">
                     <h4>Quick Links</h4>
@@ -132,12 +132,12 @@
                         <li><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
                         <li><a href="#"><i class="fas fa-phone"></i> +91 96747 24587</a></li>
                         <li><a href="#"><i class="fas fa-phone"></i> +91 70032 19312</a></li>
-                        <li><a href="#"><i class="fas fa-envelope"></i> info@bloom-nest.com</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> hello@stcraftcottage.com</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                &copy; 2026 Bloom Nest — Made with <i class="fas fa-heart" style="color:#E8B84B;"></i> for the divine.
+                &copy; 2026 S.T. Craft Cottage — Made with <i class="fas fa-heart" style="color:#E8B84B;"></i> by hand.
             </div>
         </div>
     </footer>

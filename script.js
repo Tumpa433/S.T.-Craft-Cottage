@@ -2,20 +2,51 @@
 //  CONFIGURATION — EDIT THESE VALUES
 // =============================================================
 const CONFIG = {
-    shopName: 'Bloom Nest',
-    shopLat: 22.5726,           // Kolkata latitude
-    shopLng: 88.3639,           // Kolkata longitude
-    deliveryRadiusKm: 5.0,      // Adjusted radius for better coverage
+    shopName: 'S.T. Craft Cottage',
+    // Replace these with the verified coordinates of the shop or dispatch point.
+    shopLat: 22.5726,
+    shopLng: 88.3639,
+    deliveryRadiusKm: 1.0,
+    routingService: 'https://router.project-osrm.org/route/v1/driving',
     whatsappNumber: '919674724587',
     currency: '₹',
     
     products: [
-        { id: 1, name: 'Marigold Garland', icon: '🌼', desc: 'Fresh marigold string for temple offerings', price: 99, category: 'divine' },
-        { id: 2, name: 'Rose Bouquet', icon: '🌹', desc: 'Fragrant red roses for special pujas', price: 149, category: 'fresh' },
-        { id: 3, name: 'Lotus Flower', icon: '🪷', desc: 'Sacred lotus — pure & divine', price: 79, category: 'divine' },
-        { id: 4, name: 'Jasmine Strand', icon: '🌸', desc: 'Sweet-scented jasmine for evening aarti', price: 89, category: 'garlands' },
-        { id: 5, name: 'Mixed Bouquet', icon: '💐', desc: 'Assorted blooms for festive offerings', price: 199, category: 'bouquets' },
-        { id: 6, name: 'Temple Combo', icon: '🙏', desc: 'Garland + rose + lotus — complete set', price: 299, category: 'divine' },
+        // { id: 1, name: 'Terracotta Diya Set', icon: '🪔', desc: 'Hand-painted clay diyas for a warm festive glow', price: 249, category: 'clay' },
+        // { id: 2, name: 'Indigo Thread Earrings', icon: '🔵', desc: 'Lightweight fabric earrings with a handmade finish', price: 299, category: 'fabric' },
+        { id: 3, name: 'Pink Blossom Necklace & Earring Set', icon: '📿', images: [
+            'assets/images/Jewellery/pink-flower.webp',
+            'assets/images/Jewellery/pink-flower1.webp',
+            'assets/images/Jewellery/pink-flower2.webp'
+        ], desc: 'A cheerful floral necklace and matching earrings with colorful beads — easy to style and lovely for gifting', price: 449, unit: 'set', category: 'jewellery' },
+        { id: 4, name: 'Sugandh Trio', icon: '🕯️', images: [
+            'assets/images/candles/small-glass-rose2.webp',
+            'assets/images/candles/small-glass-rose1.webp',
+            'assets/images/candles/small-glass-rose.webp'
+        ], desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your glass quantity and available colour.', variants: [
+            { id: 'mogra-1', name: 'Mogra · 1 glass', price: 149, unit: 'piece' },
+            { id: 'mogra-2', name: 'Mogra · 2 glasses', price: 279, unit: 'pack' },
+            { id: 'mogra-3', name: 'Mogra · 3 glasses', price: 399, unit: 'pack' },
+            { id: 'jasmine-1', name: 'Jasmine · 1 glass', price: 149, unit: 'piece' },
+            { id: 'jasmine-2', name: 'Jasmine · 2 glasses', price: 279, unit: 'pack' },
+            { id: 'jasmine-3', name: 'Jasmine · 3 glasses', price: 399, unit: 'pack' },
+            { id: 'sandalwood-1', name: 'Sandalwood · 1 glass', price: 149, unit: 'piece' },
+            { id: 'sandalwood-2', name: 'Sandalwood · 2 glasses', price: 279, unit: 'pack' },
+            { id: 'sandalwood-3', name: 'Sandalwood · 3 glasses', price: 399, unit: 'pack' },
+            { id: 'unscented-1', name: 'Unscented · 1 glass', price: 129, unit: 'piece' },
+            { id: 'unscented-2', name: 'Unscented · 2 glasses', price: 239, unit: 'pack' },
+            { id: 'unscented-3', name: 'Unscented · 3 glasses', price: 339, unit: 'pack' }
+        ], category: 'candles' },
+        { id: 5, name: 'Aura Waves Twisted Candle', icon: '🕯️', images: [
+            'assets/images/candles/aura_waves_white-blue.webp',
+            'assets/images/candles/aura_waves_white-pink-yellow.webp'
+        ], colors: ['White & Blue', 'White, Pink & Yellow'], colorImages: {
+            'White & Blue': 'assets/images/candles/aura_waves_white-blue.webp',
+            'White, Pink & Yellow': 'assets/images/candles/aura_waves_white-pink-yellow.webp'
+        }, desc: 'A sculptural twisted candle with soft wave details, available in two colourways for shelves, tables and thoughtful gifts.', price: 249, unit: 'piece', category: 'candles' },
+        // { id: 6, name: 'Oxidised Jhumka Pair', icon: '✨', desc: 'Classic oxidised silver finish for everyday styling', price: 399, category: 'oxidised' },
+        // { id: 7, name: 'Gopal Dress Set', icon: '🧵', desc: 'Colorful hand-finished fabric outfit for Gopal', price: 499, category: 'gopal-dress' },
+        // { id: 8, name: 'Marigold Toran', icon: '🌻', desc: 'Festive artificial flower toran for your doorway', price: 699, category: 'flowers' },
     ]
 };
 
@@ -26,6 +57,8 @@ const state = {
     cart: [],
     location: null,
     distance: null,
+    gpsAccuracy: null,
+    distanceMethod: null,
     isWithinRadius: false,
     isLocating: false,
     locationChecked: false,
@@ -79,6 +112,18 @@ function haversine(lat1, lng1, lat2, lng2) {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
+async function getRoadDistanceKm(location) {
+    const coordinates = `${CONFIG.shopLng},${CONFIG.shopLat};${location.lng},${location.lat}`;
+    const response = await fetch(`${CONFIG.routingService}/${coordinates}?overview=false`, {
+        headers: { Accept: 'application/json' }
+    });
+    if (!response.ok) throw new Error(`Routing service returned ${response.status}`);
+    const data = await response.json();
+    const distanceMeters = data.routes?.[0]?.distance;
+    if (!Number.isFinite(distanceMeters)) throw new Error('No driving route found');
+    return distanceMeters / 1000;
+}
+
 // =============================================================
 //  LOCATION FUNCTIONS
 // =============================================================
@@ -92,7 +137,8 @@ function getLocation() {
             (pos) => {
                 resolve({ 
                     lat: pos.coords.latitude, 
-                    lng: pos.coords.longitude 
+                    lng: pos.coords.longitude,
+                    accuracy: pos.coords.accuracy
                 });
             },
             (err) => {
@@ -101,7 +147,7 @@ function getLocation() {
             { 
                 enableHighAccuracy: true, 
                 timeout: 10000, 
-                maximumAge: 60000 
+                maximumAge: 0
             }
         );
     });
@@ -132,11 +178,22 @@ async function checkLocation() {
     try {
         const loc = await getLocation();
         state.location = loc;
+        state.gpsAccuracy = Number.isFinite(loc.accuracy) ? loc.accuracy : null;
         
-        // Calculate distance
-        const dist = haversine(loc.lat, loc.lng, CONFIG.shopLat, CONFIG.shopLng);
+        // Prefer real road distance; use straight-line distance only if routing is unavailable.
+        let dist;
+        try {
+            dist = await getRoadDistanceKm(loc);
+            state.distanceMethod = 'road';
+        } catch (routingError) {
+            console.warn('Road distance unavailable, using GPS estimate:', routingError);
+            dist = haversine(loc.lat, loc.lng, CONFIG.shopLat, CONFIG.shopLng);
+            state.distanceMethod = 'estimate';
+        }
         state.distance = dist;
-        state.isWithinRadius = dist <= CONFIG.deliveryRadiusKm;
+        // Only promise free delivery when GPS uncertainty stays fully inside the radius.
+        const accuracyKm = state.gpsAccuracy ? state.gpsAccuracy / 1000 : 0;
+        state.isWithinRadius = dist + accuracyKm <= CONFIG.deliveryRadiusKm;
         state.locationChecked = true;
 
         if (document.getElementById('cartLocateBtn')) {
@@ -148,34 +205,34 @@ async function checkLocation() {
         // Update UI
         if (locationStatus) {
             if (state.isWithinRadius) {
-                locationStatus.innerHTML = `<span class="highlight">✅</span> You're within ${CONFIG.deliveryRadiusKm}km — Free Delivery!`;
+                locationStatus.innerHTML = `<span class="highlight">✅</span> You're within ${CONFIG.deliveryRadiusKm} km — free delivery applies`;
             } else {
-                locationStatus.innerHTML = `<span class="highlight">📍</span> ${dist.toFixed(2)}km away — outside delivery zone`;
+                locationStatus.innerHTML = `<span class="highlight">📍</span> ${dist.toFixed(2)} km by ${state.distanceMethod === 'road' ? 'road' : 'GPS estimate'} — outside delivery zone`;
             }
         }
         
         if (locationSub) {
             if (state.isWithinRadius) {
-                locationSub.textContent = `Distance: ${dist.toFixed(2)}km from our shop. Free delivery available!`;
+                locationSub.textContent = `${state.distanceMethod === 'road' ? 'Driving distance' : 'Estimated GPS distance'}: ${dist.toFixed(2)} km${state.gpsAccuracy ? ` (GPS accuracy ±${Math.round(state.gpsAccuracy)} m)` : ''}. Final delivery availability is confirmed with your order.`;
             } else {
-                locationSub.textContent = `Free delivery only within ${CONFIG.deliveryRadiusKm}km.`;
+                locationSub.textContent = `Free delivery applies only within ${CONFIG.deliveryRadiusKm} km. ${state.distanceMethod === 'road' ? 'Driving distance calculated from the route.' : 'GPS distance is approximate.'} Final availability is confirmed with your order.`;
             }
         }
         
         if (distanceBadge) {
             if (state.isWithinRadius) {
                 distanceBadge.className = 'distance-badge';
-                distanceBadge.innerHTML = `<i class="fas fa-check-circle"></i> ${dist.toFixed(2)}km · Free`;
+                distanceBadge.innerHTML = `<i class="fas fa-check-circle"></i> ${dist.toFixed(2)} km · ${state.distanceMethod === 'road' ? 'Road · Free' : 'Estimate · Free'}`;
             } else {
                 distanceBadge.className = 'distance-badge far';
-                distanceBadge.innerHTML = `<i class="fas fa-xmark-circle"></i> ${dist.toFixed(2)}km · No delivery`;
+                distanceBadge.innerHTML = `<i class="fas fa-xmark-circle"></i> ${dist.toFixed(2)} km · ${state.distanceMethod === 'road' ? 'Road · No delivery' : 'Estimate · No delivery'}`;
             }
         }
 
         showToast(
             state.isWithinRadius 
-                ? `✅ You're within ${CONFIG.deliveryRadiusKm}km! Free delivery available.`
-                : `📍 You're ${dist.toFixed(2)}km away. Free delivery only within ${CONFIG.deliveryRadiusKm}km.`,
+                ? `✅ Driving distance is ${dist.toFixed(2)} km. Free delivery applies within ${CONFIG.deliveryRadiusKm} km.`
+                : `📍 Driving distance is ${dist.toFixed(2)} km. Free delivery applies only within ${CONFIG.deliveryRadiusKm} km.`,
             state.isWithinRadius ? 'success' : 'error'
         );
         
@@ -195,7 +252,7 @@ async function checkLocation() {
             distanceBadge.className = 'distance-badge far';
             distanceBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Unknown';
         }
-        showToast('Could not detect location. Please allow location access.', 'error');
+        showToast('Location was not shared. You can still place an order with the standard delivery charge.', 'error');
     } finally {
         state.isLocating = false;
         if (locateBtn) {
@@ -208,36 +265,44 @@ async function checkLocation() {
 // =============================================================
 //  CART FUNCTIONS
 // =============================================================
-function addToCart(productId) {
+function addToCart(productId, variantIndex = 0, selectedColor = '') {
     const product = CONFIG.products.find(p => p.id === productId);
     if (!product) return;
+    const variant = product.variants?.[variantIndex];
+    const colorKey = selectedColor || 'default';
+    const cartKey = `${product.id}:${variant?.id || 'base'}:${colorKey}`;
+    const cartItem = {
+        ...product,
+        ...(variant || {}),
+        productId: product.id,
+        variantKey: cartKey,
+        selectedColor,
+        productName: product.name,
+        qty: 1
+    };
 
-    const existing = state.cart.find(item => item.id === productId);
+    const existing = state.cart.find(item => (item.variantKey || `${item.id}:base:default`) === cartKey);
     if (existing) {
         existing.qty += 1;
     } else {
-        state.cart.push({ ...product, qty: 1 });
+        state.cart.push(cartItem);
     }
     
     saveCart();
     updateCartUI();
     updateWhatsAppButton();
-    showToast(`✅ Added ${product.name} to cart`, 'success', 2500);
+    showToast(`✅ Added ${product.name}${variant ? ` (${variant.name})` : ''} to cart`, 'success', 2500);
 
-    // Animate button
+    // Keep the add control in sync with the quantity for this variant.
     const btn = document.querySelector(`.btn-add[data-id="${productId}"]`);
     if (btn) {
         btn.classList.add('in-cart');
-        btn.innerHTML = '<i class="fas fa-check"></i> Added';
-        setTimeout(() => {
-            btn.classList.remove('in-cart');
-            btn.innerHTML = '<i class="fas fa-plus"></i> Add to Cart';
-        }, 1500);
+        btn.innerHTML = `<i class="fas fa-plus"></i> Add one more <small>(${existing ? existing.qty : 1} in basket)</small>`;
     }
 }
 
-function removeFromCart(productId) {
-    state.cart = state.cart.filter(item => item.id !== productId);
+function removeFromCart(cartKey) {
+    state.cart = state.cart.filter(item => (item.variantKey || `${item.id}:base:default`) !== cartKey);
     saveCart();
     updateCartUI();
     updateWhatsAppButton();
@@ -254,11 +319,11 @@ function clearCart() {
 }
 
 function saveCart() {
-    localStorage.setItem('bloomNestCart', JSON.stringify(state.cart));
+    localStorage.setItem('stCraftCottageCart', JSON.stringify(state.cart));
 }
 
 function loadCart() {
-    const saved = localStorage.getItem('bloomNestCart');
+    const saved = localStorage.getItem('stCraftCottageCart');
     if (saved) {
         try {
             state.cart = JSON.parse(saved);
@@ -301,13 +366,13 @@ function updateCartUI() {
     
     const cartTotalAmount = document.getElementById('cartTotalAmount');
     if (cartTotalAmount) {
-        const deliveryCharge = state.isWithinRadius ? 0 : 50;
+        const deliveryCharge = 0;
         cartTotalAmount.textContent = `${CONFIG.currency}${totalPrice + deliveryCharge}`;
     }
     
     const cartDelivery = document.getElementById('cartDelivery');
     if (cartDelivery) {
-        cartDelivery.textContent = state.isWithinRadius ? 'Free' : `${CONFIG.currency}50`;
+        cartDelivery.textContent = 'Free within 1 km*';
     }
 
     // Update cart items on cart page
@@ -319,9 +384,9 @@ function updateCartUI() {
             cartItemsContainer.innerHTML = `
                 <div class="cart-empty">
                     <i class="fas fa-basket-shopping"></i>
-                    <p>Your cart is empty. Add some divine flowers!</p>
+                    <p>Your cart is waiting for something handmade.</p>
                     <a href="products.html" class="btn-primary">
-                        <i class="fas fa-shopping-bag"></i> Browse Flowers
+                        <i class="fas fa-store"></i> Browse the collection
                     </a>
                 </div>
             `;
@@ -334,11 +399,11 @@ function updateCartUI() {
                     <div class="item-info">
                         <span style="font-size:1.4rem;">${item.icon}</span>
                         <span class="qty">${item.qty}</span>
-                        <span class="name">${item.name}</span>
+                        <span class="name">${item.productName || item.name}${item.variantKey && item.name !== item.productName ? `<small>${item.name}${item.selectedColor ? ` · ${item.selectedColor}` : ''}</small>` : ''}</span>
                     </div>
                     <div style="display:flex;align-items:center;gap:10px;">
                         <span class="item-price">${CONFIG.currency}${item.price * item.qty}</span>
-                        <button class="btn-remove" data-id="${item.id}" title="Remove">
+                        <button class="btn-remove" data-id="${item.variantKey || `${item.id}:base`}" title="Remove">
                             <i class="fas fa-trash-can"></i>
                         </button>
                     </div>
@@ -352,8 +417,7 @@ function updateCartUI() {
             // Remove buttons
             cartItemsContainer.querySelectorAll('.btn-remove').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const id = parseInt(btn.dataset.id);
-                    removeFromCart(id);
+                    removeFromCart(btn.dataset.id);
                 });
             });
         }
@@ -365,19 +429,6 @@ function updateWhatsAppButton() {
     if (!btn) return;
     
     const hasItems = state.cart.length > 0;
-    const checked = state.locationChecked;
-    const within = state.isWithinRadius;
-
-    console.log('WhatsApp Button Check:', { hasItems, checked, within }); // Debug
-
-    // If location is checked but outside zone, block it. 
-    // If not checked, allow it but they pay delivery fee.
-    if (checked && !within) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-xmark-circle"></i> Outside delivery zone';
-        btn.className = 'btn-whatsapp';
-        return;
-    }
     if (!hasItems) {
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add items to cart';
@@ -396,14 +447,14 @@ function updateWhatsAppButton() {
 function getWhatsAppMessage() {
     const items = state.cart;
     const total = getTotalPrice();
-    const deliveryCharge = state.isWithinRadius ? 0 : 50;
+    const deliveryCharge = 0;
     
     const name = document.getElementById('orderName')?.value || '';
     const phone = document.getElementById('orderPhone')?.value || '';
     const address = document.getElementById('orderAddress')?.value || '';
     const notes = document.getElementById('orderNotes')?.value || '';
 
-    let msg = `🪷 *${CONFIG.shopName}* — New Order\n\n`;
+    let msg = `🧵 *${CONFIG.shopName}* — New Order\n\n`;
     
     if (name) {
         msg += `👤 *Customer Details:*\n`;
@@ -416,11 +467,11 @@ function getWhatsAppMessage() {
 
     msg += `📋 *Items:*\n`;
     items.forEach(i => {
-        msg += `  • ${i.icon} ${i.name} × ${i.qty} = ${CONFIG.currency}${i.price * i.qty}\n`;
+        msg += `  • ${i.icon} ${i.productName || i.name}${i.variantKey && i.name !== i.productName ? ` (${i.name}${i.selectedColor ? `, ${i.selectedColor}` : ''})` : ''} × ${i.qty} = ${CONFIG.currency}${i.price * i.qty}\n`;
     });
     
     msg += `\n💰 *Subtotal:* ${CONFIG.currency}${total}\n`;
-    msg += `🚚 *Delivery:* ${deliveryCharge === 0 ? 'Free' : CONFIG.currency + deliveryCharge}\n`;
+    msg += `🚚 *Delivery:* Free within 1 km (address confirmation required)\n`;
     msg += `🧾 *Total Amount:* ${CONFIG.currency}${total + deliveryCharge}\n`;
     /* Location feature temporarily disabled
     msg += `📍 *Distance:* ${state.distance ? state.distance.toFixed(2) : 'Unknown'}km `;
@@ -431,7 +482,7 @@ function getWhatsAppMessage() {
     }
     */
     
-    msg += `\n\n🙏 *Jai Shri Ram!* Please confirm my order.`;
+    msg += `\n\n🤎 Please confirm my handmade order.`;
     return encodeURIComponent(msg);
 }
 
@@ -474,23 +525,109 @@ function renderProducts(containerId, filter = 'all') {
         return;
     }
     
-    container.innerHTML = products.map(p => `
+    container.innerHTML = products.map(p => {
+        const images = p.images || (p.image ? [p.image] : []);
+        const media = images.length
+            ? `<div class="product-gallery">
+                <img class="icon product-image" src="${images[0]}" alt="${p.name}" loading="lazy">
+                ${images.length > 1 ? `<div class="product-thumbnails" aria-label="More images of ${p.name}">
+                    ${images.map((image, index) => `<button class="product-thumbnail${index === 0 ? ' active' : ''}" type="button" data-image="${image}" aria-label="View image ${index + 1}">
+                        <img src="${image}" alt="" loading="lazy">
+                    </button>`).join('')}
+                </div>` : ''}
+            </div>`
+            : `<span class="icon">${p.icon}</span>`;
+
+        const variantOptions = (p.variants?.length || p.colors?.length)
+            ? `${p.variants?.length ? `<div class="variant-grid">
+                 <div><label class="variant-label" for="scent-${p.id}">Scent</label>
+                 <select class="product-scent" id="scent-${p.id}">
+                     ${[...new Set(p.variants.map(variant => variant.name.split(' · ')[0]))].map(scent => `<option value="${scent}">${scent}</option>`).join('')}
+                 </select></div>
+                 <div><label class="variant-label" for="size-${p.id}">Size</label>
+                 <select class="product-size" id="size-${p.id}">
+                     ${[...new Set(p.variants.map(variant => variant.name.split(' · ')[1]))].map(size => `<option value="${size}">${size}</option>`).join('')}
+                   </select></div>
+                   </div>` : ''}
+               ${p.colors?.length ? `<label class="variant-label" for="color-${p.id}">Colour</label>
+               <select class="product-color" id="color-${p.id}">
+                   ${p.colors.map(color => `<option value="${color}">${color}</option>`).join('')}
+               </select>` : ''}`
+            : '';
+
+        return `
         <div class="product-card" data-id="${p.id}">
-            <span class="icon">${p.icon}</span>
+            ${media}
             <h3>${p.name}</h3>
             <p class="desc">${p.desc}</p>
-            <div class="price">${CONFIG.currency}${p.price} <small>/ unit</small></div>
+            <div class="variant-area">${variantOptions}</div>
+            <div class="price product-price">${CONFIG.currency}${p.variants?.[0]?.price || p.price} <small>/ ${p.variants?.[0]?.unit || p.unit || 'unit'}</small></div>
             <button class="btn-add" data-id="${p.id}">
                 <i class="fas fa-plus"></i> Add to Cart
             </button>
         </div>
-    `).join('');
+    `;
+    }).join('');
+
+    container.querySelectorAll('.product-thumbnail').forEach(thumbnail => {
+        thumbnail.addEventListener('click', () => {
+            const gallery = thumbnail.closest('.product-gallery');
+            const mainImage = gallery.querySelector('.product-image');
+            mainImage.src = thumbnail.dataset.image;
+            gallery.querySelectorAll('.product-thumbnail').forEach(item => item.classList.remove('active'));
+            thumbnail.classList.add('active');
+        });
+    });
 
     container.querySelectorAll('.btn-add').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = parseInt(btn.dataset.id);
-            addToCart(id);
+            const card = btn.closest('.product-card');
+            const variantIndex = getSelectedVariantIndex(card, CONFIG.products.find(item => item.id === id));
+            const colorSelect = card.querySelector('.product-color');
+            addToCart(id, variantIndex, colorSelect ? colorSelect.value : '');
         });
+    });
+
+    container.querySelectorAll('.product-scent, .product-size, .product-color').forEach(select => {
+        select.addEventListener('change', () => updateVariantCard(select.closest('.product-card')));
+    });
+}
+
+
+function getSelectedVariantIndex(card, product) {
+    if (!product.variants?.length) return 0;
+    const scent = card.querySelector('.product-scent')?.value;
+    const size = card.querySelector('.product-size')?.value;
+    const variantIndex = product.variants.findIndex(variant => variant.name === `${scent} · ${size}`);
+    return variantIndex >= 0 ? variantIndex : 0;
+}
+
+function updateVariantCard(card) {
+    const product = CONFIG.products.find(item => item.id === parseInt(card.dataset.id));
+    if (!product) return;
+    const variant = product.variants?.[getSelectedVariantIndex(card, product)];
+    const price = variant?.price || product.price;
+    const unit = variant?.unit || product.unit || 'unit';
+    card.querySelector('.product-price').innerHTML = `${CONFIG.currency}${price} <small>/ ${unit}</small>`;
+    const color = card.querySelector('.product-color')?.value || '';
+    updateColorImage(card, product, color);
+    const cartKey = `${product.id}:${variant?.id || 'base'}:${color || 'default'}`;
+    const cartItem = state.cart.find(item => item.variantKey === cartKey);
+    const addButton = card.querySelector('.btn-add');
+    addButton.classList.toggle('in-cart', Boolean(cartItem));
+    addButton.innerHTML = cartItem
+        ? `<i class="fas fa-plus"></i> Add one more <small>(${cartItem.qty} in basket)</small>`
+        : '<i class="fas fa-plus"></i> Add to Cart';
+}
+
+function updateColorImage(card, product, color) {
+    const image = product.colorImages?.[color];
+    if (!image) return;
+    const mainImage = card.querySelector('.product-image');
+    if (mainImage) mainImage.src = image;
+    card.querySelectorAll('.product-thumbnail').forEach(thumbnail => {
+        thumbnail.classList.toggle('active', thumbnail.dataset.image === image);
     });
 }
 
@@ -527,6 +664,17 @@ function initContactForm() {
 //  FILTERS
 // =============================================================
 function initFilters() {
+    const filterBar = document.querySelector('.filter-bar');
+    if (filterBar) {
+        const categories = [...new Set(CONFIG.products.map(product => product.category))];
+        filterBar.innerHTML = `
+            <button class="filter-btn active" data-filter="all">All</button>
+            ${categories.map(category => `
+                <button class="filter-btn" data-filter="${category}">${formatCategoryName(category)}</button>
+            `).join('')}
+        `;
+    }
+
     const filterBtns = document.querySelectorAll('.filter-btn');
     if (!filterBtns.length) return;
     
@@ -538,6 +686,13 @@ function initFilters() {
             renderProducts('allProducts', filter);
         });
     });
+}
+
+function formatCategoryName(category) {
+    return category
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }
 
 // =============================================================
@@ -573,12 +728,23 @@ function initScroll() {
     });
 }
 
+function updateCatalogStats() {
+    const productCount = document.getElementById('productCount');
+    const categoryCount = document.getElementById('categoryCount');
+
+    if (productCount) productCount.textContent = CONFIG.products.length;
+    if (categoryCount) {
+        categoryCount.textContent = new Set(CONFIG.products.map(product => product.category)).size;
+    }
+}
+
 // =============================================================
 //  INITIALIZATION
 // =============================================================
 function init() {
     // Load cart from localStorage
     loadCart();
+    updateCatalogStats();
     
     // Render products on all pages
     if (document.getElementById('featuredProducts')) {
@@ -596,10 +762,6 @@ function init() {
     const locateBtn = document.getElementById('locateBtn');
     if (locateBtn) {
         locateBtn.addEventListener('click', checkLocation);
-    }
-    const cartLocateBtn = document.getElementById('cartLocateBtn');
-    if (cartLocateBtn) {
-        cartLocateBtn.addEventListener('click', checkLocation);
     }
     
     // WhatsApp button
@@ -634,7 +796,7 @@ function init() {
     
     // Welcome toast
     setTimeout(() => {
-        showToast('🌺 Welcome to Bloom Nest! Click "Detect Location" to check delivery.', 'info', 5000);
+        showToast('🤎 Welcome to S.T. Craft Cottage. Browse our handmade collection.', 'info', 5000);
     }, 500);
 }
 
