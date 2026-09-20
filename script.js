@@ -10,20 +10,34 @@ const CONFIG = {
     routingService: 'https://router.project-osrm.org/route/v1/driving',
     whatsappNumber: '919674724587',
     currency: '₹',
-    
-    products: [
-        // { id: 1, name: 'Terracotta Diya Set', icon: '🪔', desc: 'Hand-painted clay diyas for a warm festive glow', price: 249, category: 'clay' },
-        // { id: 2, name: 'Indigo Thread Earrings', icon: '🔵', desc: 'Lightweight fabric earrings with a handmade finish', price: 299, category: 'fabric' },
-        { id: 3, name: 'Pink Blossom Necklace & Earring Set', icon: '📿', images: [
+    products: []
+};
+
+const FALLBACK_PRODUCTS = [
+    {
+        id: 3,
+        name: 'Pink Blossom Necklace & Earring Set',
+        icon: '📿',
+        images: [
             'assets/images/Jewellery/pink-flower.webp',
-            'assets/images/Jewellery/pink-flower1.webp',
-            'assets/images/Jewellery/pink-flower2.webp'
-        ], desc: 'A cheerful floral necklace and matching earrings with colorful beads — easy to style and lovely for gifting', price: 449, unit: 'set', category: 'jewellery' },
-        { id: 4, name: 'Sugandh Trio', icon: '🕯️', images: [
+            'assets/images/Jewellery/pink-flower1.webp'
+        ],
+        desc: 'A cheerful floral necklace and matching earrings with colorful beads — easy to style and lovely for gifting',
+        price: 449,
+        unit: 'set',
+        category: 'jewellery'
+    },
+    {
+        id: 4,
+        name: 'Rose Bloom Glass',
+        icon: '🕯️',
+        images: [
             'assets/images/candles/small-glass-rose2.webp',
             'assets/images/candles/small-glass-rose1.webp',
             'assets/images/candles/small-glass-rose.webp'
-        ], desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your glass quantity and available colour.', variants: [
+        ],
+        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your glass quantity and available colour.',
+        variants: [
             { id: 'mogra-1', name: 'Mogra · 1 glass', price: 149, unit: 'piece' },
             { id: 'mogra-2', name: 'Mogra · 2 glasses', price: 279, unit: 'pack' },
             { id: 'mogra-3', name: 'Mogra · 3 glasses', price: 399, unit: 'pack' },
@@ -36,19 +50,102 @@ const CONFIG = {
             { id: 'unscented-1', name: 'Unscented · 1 glass', price: 129, unit: 'piece' },
             { id: 'unscented-2', name: 'Unscented · 2 glasses', price: 239, unit: 'pack' },
             { id: 'unscented-3', name: 'Unscented · 3 glasses', price: 339, unit: 'pack' }
-        ], category: 'candles' },
-        { id: 5, name: 'Aura Waves Twisted Candle', icon: '🕯️', images: [
+        ],
+        category: 'candles'
+    },
+    {
+        id: 5,
+        name: 'Aura Waves Twisted Candle',
+        icon: '🕯️',
+        images: [
             'assets/images/candles/aura_waves_white-blue.webp',
             'assets/images/candles/aura_waves_white-pink-yellow.webp'
-        ], colors: ['White & Blue', 'White, Pink & Yellow'], colorImages: {
+        ],
+        colors: ['White & Blue', 'White, Pink & Yellow'],
+        colorImages: {
             'White & Blue': 'assets/images/candles/aura_waves_white-blue.webp',
             'White, Pink & Yellow': 'assets/images/candles/aura_waves_white-pink-yellow.webp'
-        }, desc: 'A sculptural twisted candle with soft wave details, available in two colourways for shelves, tables and thoughtful gifts.', price: 249, unit: 'piece', category: 'candles' },
-        // { id: 6, name: 'Oxidised Jhumka Pair', icon: '✨', desc: 'Classic oxidised silver finish for everyday styling', price: 399, category: 'oxidised' },
-        // { id: 7, name: 'Gopal Dress Set', icon: '🧵', desc: 'Colorful hand-finished fabric outfit for Gopal', price: 499, category: 'gopal-dress' },
-        // { id: 8, name: 'Marigold Toran', icon: '🌻', desc: 'Festive artificial flower toran for your doorway', price: 699, category: 'flowers' },
-    ]
-};
+        },
+        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your candle quantity and available colour.',
+        variants: [
+            { id: 'mogra-1', name: 'Mogra · 1 candle', price: 249, unit: 'piece' },
+            { id: 'mogra-3', name: 'Mogra · 3 candles', price: 699, unit: 'pack' },
+            { id: 'jasmine-1', name: 'Jasmine · 1 candle', price: 249, unit: 'piece' },
+            { id: 'jasmine-3', name: 'Jasmine · 3 candles', price: 699, unit: 'pack' },
+            { id: 'sandalwood-1', name: 'Sandalwood · 1 candle', price: 249, unit: 'piece' },
+            { id: 'sandalwood-3', name: 'Sandalwood · 3 candles', price: 699, unit: 'pack' },
+            { id: 'unscented-1', name: 'Unscented · 1 candle', price: 219, unit: 'piece' },
+            { id: 'unscented-3', name: 'Unscented · 3 candles', price: 629, unit: 'pack' }
+        ],
+        price: 249,
+        unit: 'piece',
+        category: 'candles'
+    },
+    {
+        id: 6,
+        name: 'Coastal Shells',
+        icon: '🕯️',
+        images: [
+            'assets/images/candles/Coastal Shells.webp',
+            'assets/images/candles/Coastal Shells1.webp',
+            'assets/images/candles/Coastal Shells2.webp'
+        ],
+        colors: ['Pastel Pink', 'Ocean Blue', 'Buttery Yellow'],
+        colorImages: {
+            'Pastel Pink': 'assets/images/candles/Coastal Shells.webp',
+            'Ocean Blue': 'assets/images/candles/Coastal Shells2.webp',
+            'Buttery Yellow': 'assets/images/candles/Coastal Shells1.webp'
+        },
+        desc: 'Choose Mogra, Jasmine, Sandalwood, or unscented, then select your available colour.',
+        variants: [
+            { id: 'mogra', name: 'Mogra', price: 599, unit: 'piece' },
+            { id: 'jasmine', name: 'Jasmine', price: 599, unit: 'piece' },
+            { id: 'sandalwood', name: 'Sandalwood', price: 599, unit: 'piece' },
+            { id: 'unscented', name: 'Unscented', price: 549, unit: 'piece' }
+        ],
+        price: 599,
+        unit: 'piece',
+        category: 'candles'
+    },
+    {
+        id: 7,
+        name: 'Mrittika Stem Glass',
+        icon: '🕯️',
+        images: [
+            'assets/images/candles/Mrittika Stem Glass.webp'
+        ],
+        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your stem glass quantity.',
+        variants: [
+            { id: 'mogra-1', name: 'Mogra · 1 stem glass', price: 299, unit: 'piece' },
+            { id: 'mogra-3', name: 'Mogra · 3 stem glasses', price: 599, unit: 'pack' },
+            { id: 'jasmine-1', name: 'Jasmine · 1 stem glass', price: 299, unit: 'piece' },
+            { id: 'jasmine-3', name: 'Jasmine · 3 stem glasses', price: 599, unit: 'pack' },
+            { id: 'sandalwood-1', name: 'Sandalwood · 1 stem glass', price: 299, unit: 'piece' },
+            { id: 'sandalwood-3', name: 'Sandalwood · 3 stem glasses', price: 599, unit: 'pack' },
+            { id: 'unscented-1', name: 'Unscented · 1 stem glass', price: 269, unit: 'piece' },
+            { id: 'unscented-3', name: 'Unscented · 3 stem glasses', price: 539, unit: 'pack' }
+        ],
+        price: 299,
+        unit: 'piece',
+        category: 'candles'
+    }
+];
+
+async function loadProducts() {
+    try {
+        const response = await fetch('products.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (Array.isArray(data) && data.length) {
+            CONFIG.products = data;
+            return;
+        }
+        throw new Error('Empty products list');
+    } catch (error) {
+        console.warn('Falling back to embedded products because products.json could not be loaded:', error);
+        CONFIG.products = FALLBACK_PRODUCTS;
+    }
+}
 
 // =============================================================
 //  STATE
@@ -511,6 +608,46 @@ function placeOrder() {
 // =============================================================
 //  RENDER PRODUCTS
 // =============================================================
+function isLikelyScentValue(value) {
+    const normalized = String(value || '').trim().toLowerCase();
+    if (!normalized) return false;
+    return /(mogra|jasmine|sandalwood|unscented|scented|rose|lavender|vanilla|lemongrass|amber|floral|fragrance)/i.test(normalized);
+}
+
+function getVariantFieldLabel(product) {
+    const variantNames = (product.variants || []).map(variant => String(variant.name || ''));
+    if (variantNames.length && variantNames.every(name => !name.includes(' · '))) {
+        return isLikelyScentValue(variantNames[0]) || variantNames.some(isLikelyScentValue) ? 'Scented' : 'Quantity';
+    }
+
+    const hasSecondaryField = variantNames.some(name => name.includes(' · '));
+    if (!hasSecondaryField) return null;
+
+    const variantValues = [...new Set(variantNames.map(name => name.split(' · ')[1] || ''))];
+    const hasShapeLikeValues = variantValues.some(value => {
+        const normalized = value.trim();
+        return normalized && !/\d/.test(normalized) && !/(glass|candle|piece|pack|set|count)/i.test(normalized);
+    });
+    return hasShapeLikeValues ? 'Shape' : 'Size';
+}
+
+function getVariantGroups(product) {
+    const groups = {};
+    (product.variants || []).forEach(variant => {
+        const parts = String(variant.name || '').split(' · ');
+        const primary = parts[0] || variant.name || 'Default';
+        const secondary = parts[1] || '';
+        if (!groups[primary]) groups[primary] = [];
+        if (secondary) groups[primary].push(secondary);
+    });
+    return groups;
+}
+
+function isLikelySizePrimaryValue(value) {
+    const normalized = String(value || '').toLowerCase();
+    return /(small|large|big|standard|medium|duo|mini|pillar|glass|cup)/i.test(normalized);
+}
+
 function renderProducts(containerId, filter = 'all') {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -538,17 +675,29 @@ function renderProducts(containerId, filter = 'all') {
             </div>`
             : `<span class="icon">${p.icon}</span>`;
 
+        const variantFieldLabel = p.variants?.length ? getVariantFieldLabel(p) : null;
+        const variantGroups = p.variants?.length ? getVariantGroups(p) : {};
+        const primaryValues = p.variants?.length ? Object.keys(variantGroups) : [];
+        const hasSecondaryVariantField = Boolean(variantFieldLabel) && variantFieldLabel !== 'Quantity' && variantFieldLabel !== 'Scented';
+        const primaryLabel = p.variants?.length && primaryValues.length
+            ? (variantFieldLabel === 'Quantity' ? 'Quantity' : variantFieldLabel === 'Scented' ? 'Scented' : (isLikelySizePrimaryValue(primaryValues[0]) ? 'Size' : 'Scent'))
+            : 'Scent';
+        const defaultPrimaryValue = primaryValues[0] || '';
+        const defaultSecondaryValues = primaryValues.length ? [...new Set((variantGroups[defaultPrimaryValue] || []))] : [];
+
         const variantOptions = (p.variants?.length || p.colors?.length)
-            ? `${p.variants?.length ? `<div class="variant-grid">
-                 <div><label class="variant-label" for="scent-${p.id}">Scent</label>
+            ? `${p.variants?.length ? (variantFieldLabel === 'Quantity'
+                ? `<div class="variant-grid"><div><label class="variant-label" for="scent-${p.id}">Quantity</label><select class="product-scent" id="scent-${p.id}">${primaryValues.map(value => `<option value="${value}">${value}</option>`).join('')}</select></div></div>`
+                : `<div class="variant-grid">
+                 <div><label class="variant-label" for="scent-${p.id}">${primaryLabel}</label>
                  <select class="product-scent" id="scent-${p.id}">
-                     ${[...new Set(p.variants.map(variant => variant.name.split(' · ')[0]))].map(scent => `<option value="${scent}">${scent}</option>`).join('')}
+                     ${primaryValues.map(value => `<option value="${value}">${value}</option>`).join('')}
                  </select></div>
-                 <div><label class="variant-label" for="size-${p.id}">Size</label>
+                 ${hasSecondaryVariantField ? `<div><label class="variant-label" for="size-${p.id}">${variantFieldLabel}</label>
                  <select class="product-size" id="size-${p.id}">
-                     ${[...new Set(p.variants.map(variant => variant.name.split(' · ')[1]))].map(size => `<option value="${size}">${size}</option>`).join('')}
-                   </select></div>
-                   </div>` : ''}
+                     ${defaultSecondaryValues.map(size => `<option value="${size}">${size}</option>`).join('')}
+                   </select></div>` : ''}
+                   </div>`) : ''}
                ${p.colors?.length ? `<label class="variant-label" for="color-${p.id}">Colour</label>
                <select class="product-color" id="color-${p.id}">
                    ${p.colors.map(color => `<option value="${color}">${color}</option>`).join('')}
@@ -573,6 +722,20 @@ function renderProducts(containerId, filter = 'all') {
         thumbnail.addEventListener('click', () => {
             const gallery = thumbnail.closest('.product-gallery');
             const mainImage = gallery.querySelector('.product-image');
+            const card = thumbnail.closest('.product-card');
+            const product = CONFIG.products.find(item => item.id === parseInt(card?.dataset?.id || '0'));
+            const matchedColor = product && product.colorImages
+                ? Object.keys(product.colorImages).find(color => product.colorImages[color] === thumbnail.dataset.image)
+                : null;
+
+            if (matchedColor && card) {
+                const colorSelect = card.querySelector('.product-color');
+                if (colorSelect) {
+                    colorSelect.value = matchedColor;
+                    updateVariantCard(card);
+                }
+            }
+
             mainImage.src = thumbnail.dataset.image;
             gallery.querySelectorAll('.product-thumbnail').forEach(item => item.classList.remove('active'));
             thumbnail.classList.add('active');
@@ -589,7 +752,30 @@ function renderProducts(containerId, filter = 'all') {
         });
     });
 
-    container.querySelectorAll('.product-scent, .product-size, .product-color').forEach(select => {
+    container.querySelectorAll('.product-scent').forEach(select => {
+        select.addEventListener('change', () => {
+            const card = select.closest('.product-card');
+            const product = CONFIG.products.find(item => item.id === parseInt(card?.dataset?.id || '0'));
+            const sizeSelect = card?.querySelector('.product-size');
+            if (!product || !sizeSelect) {
+                updateVariantCard(card);
+                return;
+            }
+
+            const groups = getVariantGroups(product);
+            const selectedPrimary = select.value;
+            const availableSizes = [...new Set(groups[selectedPrimary] || [])];
+
+            sizeSelect.innerHTML = availableSizes.map(value => `<option value="${value}">${value}</option>`).join('');
+            if (!availableSizes.includes(sizeSelect.value)) {
+                sizeSelect.value = availableSizes[0] || '';
+            }
+
+            updateVariantCard(card);
+        });
+    });
+
+    container.querySelectorAll('.product-size, .product-color').forEach(select => {
         select.addEventListener('change', () => updateVariantCard(select.closest('.product-card')));
     });
 }
@@ -597,10 +783,30 @@ function renderProducts(containerId, filter = 'all') {
 
 function getSelectedVariantIndex(card, product) {
     if (!product.variants?.length) return 0;
-    const scent = card.querySelector('.product-scent')?.value;
-    const size = card.querySelector('.product-size')?.value;
-    const variantIndex = product.variants.findIndex(variant => variant.name === `${scent} · ${size}`);
-    return variantIndex >= 0 ? variantIndex : 0;
+    const primarySelect = card.querySelector('.product-scent');
+    const primary = primarySelect?.value || '';
+    const secondarySelect = card.querySelector('.product-size');
+    const secondary = secondarySelect?.value || '';
+
+    if (primarySelect && secondary) {
+        const variantIndex = product.variants.findIndex(variant => variant.name === `${primary} · ${secondary}`);
+        return variantIndex >= 0 ? variantIndex : 0;
+    }
+
+    if (primarySelect && !secondary) {
+        const variantIndex = product.variants.findIndex(variant => {
+            const name = String(variant.name || '');
+            return name === primary || name.startsWith(`${primary} · `);
+        });
+        return variantIndex >= 0 ? variantIndex : 0;
+    }
+
+    if (secondarySelect) {
+        const variantIndex = product.variants.findIndex(variant => variant.name === secondary);
+        return variantIndex >= 0 ? variantIndex : 0;
+    }
+
+    return 0;
 }
 
 function updateVariantCard(card) {
@@ -741,7 +947,9 @@ function updateCatalogStats() {
 // =============================================================
 //  INITIALIZATION
 // =============================================================
-function init() {
+async function init() {
+    await loadProducts();
+
     // Load cart from localStorage
     loadCart();
     updateCatalogStats();

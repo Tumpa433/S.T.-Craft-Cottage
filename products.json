@@ -1,0 +1,229 @@
+[
+  {
+    "id": 3,
+    "name": "Pink Blossom Necklace & Earring Set",
+    "icon": "📿",
+    "images": [
+      "assets/images/Jewellery/pink-flower.webp",
+      "assets/images/Jewellery/pink-flower1.webp"
+    ],
+    "desc": "A cheerful floral necklace and matching earrings with colorful beads — easy to style and lovely for gifting",
+    "price": 449,
+    "unit": "set",
+    "category": "jewellery"
+  },
+  {
+    "id": 4,
+    "name": "Rose Bloom Glass",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/small-glass-rose2.webp",
+      "assets/images/candles/small-glass-rose1.webp",
+      "assets/images/candles/small-glass-rose.webp"
+    ],
+    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your glass quantity and available colour.",
+    "variants": [
+      { "id": "mogra-1", "name": "Mogra · 1 glass", "price": 149, "unit": "piece" },
+      { "id": "mogra-2", "name": "Mogra · 2 glasses", "price": 279, "unit": "pack" },
+      { "id": "mogra-3", "name": "Mogra · 3 glasses", "price": 399, "unit": "pack" },
+      { "id": "jasmine-1", "name": "Jasmine · 1 glass", "price": 149, "unit": "piece" },
+      { "id": "jasmine-2", "name": "Jasmine · 2 glasses", "price": 279, "unit": "pack" },
+      { "id": "jasmine-3", "name": "Jasmine · 3 glasses", "price": 399, "unit": "pack" },
+      { "id": "sandalwood-1", "name": "Sandalwood · 1 glass", "price": 149, "unit": "piece" },
+      { "id": "sandalwood-2", "name": "Sandalwood · 2 glasses", "price": 279, "unit": "pack" },
+      { "id": "sandalwood-3", "name": "Sandalwood · 3 glasses", "price": 399, "unit": "pack" },
+      { "id": "unscented-1", "name": "Unscented · 1 glass", "price": 129, "unit": "piece" },
+      { "id": "unscented-2", "name": "Unscented · 2 glasses", "price": 239, "unit": "pack" },
+      { "id": "unscented-3", "name": "Unscented · 3 glasses", "price": 339, "unit": "pack" }
+    ],
+    "category": "candles"
+  },
+  {
+    "id": 5,
+    "name": "Aura Waves Twisted Candle",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/aura_waves_white-blue.webp",
+      "assets/images/candles/aura_waves_white-pink-yellow.webp"
+    ],
+    "colors": ["White & Blue", "White, Pink & Yellow"],
+    "colorImages": {
+      "White & Blue": "assets/images/candles/aura_waves_white-blue.webp",
+      "White, Pink & Yellow": "assets/images/candles/aura_waves_white-pink-yellow.webp"
+    },
+    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your candle quantity and available colour.",
+    "variants": [
+      { "id": "mogra-1", "name": "Mogra · 1 candle", "price": 249, "unit": "piece" },
+      { "id": "mogra-3", "name": "Mogra · 3 candles", "price": 699, "unit": "pack" },
+      { "id": "jasmine-1", "name": "Jasmine · 1 candle", "price": 249, "unit": "piece" },
+      { "id": "jasmine-3", "name": "Jasmine · 3 candles", "price": 699, "unit": "pack" },
+      { "id": "sandalwood-1", "name": "Sandalwood · 1 candle", "price": 249, "unit": "piece" },
+      { "id": "sandalwood-3", "name": "Sandalwood · 3 candles", "price": 699, "unit": "pack" },
+      { "id": "unscented-1", "name": "Unscented · 1 candle", "price": 219, "unit": "piece" },
+      { "id": "unscented-3", "name": "Unscented · 3 candles", "price": 629, "unit": "pack" }
+    ],
+    "price": 249,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 6,
+    "name": "Coastal Shells",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Coastal Shells.webp",
+      "assets/images/candles/Coastal Shells1.webp",
+      "assets/images/candles/Coastal Shells2.webp"
+    ],
+    "colors": ["Pastel Pink", "Ocean Blue", "Buttery Yellow"],
+    "colorImages": {
+      "Pastel Pink": "assets/images/candles/Coastal Shells.webp",
+      "Ocean Blue": "assets/images/candles/Coastal Shells2.webp",
+      "Buttery Yellow": "assets/images/candles/Coastal Shells1.webp"
+    },
+    "desc": "Choose Mogra, Jasmine, Sandalwood, or unscented, then select your available colour.",
+    "variants": [
+      { "id": "mogra", "name": "Mogra", "price": 599, "unit": "piece" },
+      { "id": "jasmine", "name": "Jasmine", "price": 599, "unit": "piece" },
+      { "id": "sandalwood", "name": "Sandalwood", "price": 599, "unit": "piece" },
+      { "id": "unscented", "name": "Unscented", "price": 549, "unit": "piece" }
+    ],
+    "price": 599,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 7,
+    "name": "Mrittika Stem Glass",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Mrittika Stem Glass.webp",
+      "assets/images/candles/Mrittika Stem Glass1.webp",
+      "assets/images/candles/Mrittika_packet.webp"
+    ],
+    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your stem glass quantity.",
+    "variants": [
+      { "id": "mogra-1", "name": "Mogra · 1 stem glass", "price": 299, "unit": "piece" },
+      { "id": "mogra-2", "name": "Mogra · 2 stem glasses", "price": 499, "unit": "pack" },
+      { "id": "mogra-3", "name": "Mogra · 3 stem glasses", "price": 599, "unit": "pack" },
+      { "id": "jasmine-1", "name": "Jasmine · 1 stem glass", "price": 299, "unit": "piece" },
+      { "id": "jasmine-2", "name": "Jasmine · 2 stem glasses", "price": 499, "unit": "pack" },
+      { "id": "jasmine-3", "name": "Jasmine · 3 stem glasses", "price": 599, "unit": "pack" },
+      { "id": "sandalwood-1", "name": "Sandalwood · 1 stem glass", "price": 299, "unit": "piece" },
+      { "id": "sandalwood-2", "name": "Sandalwood · 2 stem glasses", "price": 499, "unit": "pack" },
+      { "id": "sandalwood-3", "name": "Sandalwood · 3 stem glasses", "price": 599, "unit": "pack" },
+      { "id": "unscented-1", "name": "Unscented · 1 stem glass", "price": 269, "unit": "piece" },
+      { "id": "unscented-2", "name": "Unscented · 2 stem glasses", "price": 429, "unit": "pack" },
+      { "id": "unscented-3", "name": "Unscented · 3 stem glasses", "price": 539, "unit": "pack" }
+    ],
+    "price": 299,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 8,
+    "name": "Mrittika Mini Cup",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Mrittika Mini Cup.webp",
+      "assets/images/candles/Mrittika_packet.webp",
+      "assets/images/candles/Mrittika Mini Cup1.webp"
+    ],
+    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your mini cup quantity.",
+    "variants": [
+      { "id": "mogra-1", "name": "Mogra · 1 mini cup", "price": 229, "unit": "piece" },
+      { "id": "mogra-2", "name": "Mogra · 2 mini cups", "price": 399, "unit": "pack" },
+      { "id": "mogra-3", "name": "Mogra · 3 mini cups", "price": 549, "unit": "pack" },
+      { "id": "jasmine-1", "name": "Jasmine · 1 mini cup", "price": 229, "unit": "piece" },
+      { "id": "jasmine-2", "name": "Jasmine · 2 mini cups", "price": 399, "unit": "pack" },
+      { "id": "jasmine-3", "name": "Jasmine · 3 mini cups", "price": 549, "unit": "pack" },
+      { "id": "sandalwood-1", "name": "Sandalwood · 1 mini cup", "price": 229, "unit": "piece" },
+      { "id": "sandalwood-2", "name": "Sandalwood · 2 mini cups", "price": 399, "unit": "pack" },
+      { "id": "sandalwood-3", "name": "Sandalwood · 3 mini cups", "price": 549, "unit": "pack" },
+      { "id": "unscented-1", "name": "Unscented · 1 mini cup", "price": 199, "unit": "piece" },
+      { "id": "unscented-2", "name": "Unscented · 2 mini cups", "price": 349, "unit": "pack" },
+      { "id": "unscented-3", "name": "Unscented · 3 mini cups", "price": 499, "unit": "pack" }
+    ],
+    "price": 229,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 9,
+    "name": "Rose Pillar Candle Small",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/small-rose-pillar.webp"
+    ],
+    "desc": "Beautiful small rose pillar candle for gifting, bedside decor, and soft table styling.",
+    "variants": [
+      { "id": "mogra-1", "name": "Mogra · 1 candle", "price": 299, "unit": "piece" },
+      { "id": "mogra-2", "name": "Mogra · 2 candles", "price": 549, "unit": "pack" },
+      { "id": "mogra-3", "name": "Mogra · 3 candles", "price": 799, "unit": "pack" },
+      { "id": "jasmine-1", "name": "Jasmine · 1 candle", "price": 299, "unit": "piece" },
+      { "id": "jasmine-2", "name": "Jasmine · 2 candles", "price": 549, "unit": "pack" },
+      { "id": "jasmine-3", "name": "Jasmine · 3 candles", "price": 799, "unit": "pack" },
+      { "id": "sandalwood-1", "name": "Sandalwood · 1 candle", "price": 299, "unit": "piece" },
+      { "id": "sandalwood-2", "name": "Sandalwood · 2 candles", "price": 549, "unit": "pack" },
+      { "id": "sandalwood-3", "name": "Sandalwood · 3 candles", "price": 799, "unit": "pack" },
+      { "id": "unscented-1", "name": "Unscented · 1 candle", "price": 269, "unit": "piece" },
+      { "id": "unscented-2", "name": "Unscented · 2 candles", "price": 499, "unit": "pack" },
+      { "id": "unscented-3", "name": "Unscented · 3 candles", "price": 729, "unit": "pack" }
+    ],
+    "price": 299,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 10,
+    "name": "Rose Pillar Candle Big",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/big-rose-pillar.webp"
+    ],
+    "desc": "Statement rose pillar candle in a larger size for centerpieces, mantels, and statement décor.",
+    "variants": [
+      { "id": "mogra-1", "name": "Mogra · 1 candle", "price": 399, "unit": "piece" },
+      { "id": "mogra-2", "name": "Mogra · 2 candles", "price": 749, "unit": "pack" },
+      { "id": "mogra-3", "name": "Mogra · 3 candles", "price": 1099, "unit": "pack" },
+      { "id": "jasmine-1", "name": "Jasmine · 1 candle", "price": 399, "unit": "piece" },
+      { "id": "jasmine-2", "name": "Jasmine · 2 candles", "price": 749, "unit": "pack" },
+      { "id": "jasmine-3", "name": "Jasmine · 3 candles", "price": 1099, "unit": "pack" },
+      { "id": "sandalwood-1", "name": "Sandalwood · 1 candle", "price": 399, "unit": "piece" },
+      { "id": "sandalwood-2", "name": "Sandalwood · 2 candles", "price": 749, "unit": "pack" },
+      { "id": "sandalwood-3", "name": "Sandalwood · 3 candles", "price": 1099, "unit": "pack" },
+      { "id": "unscented-1", "name": "Unscented · 1 candle", "price": 349, "unit": "piece" },
+      { "id": "unscented-2", "name": "Unscented · 2 candles", "price": 649, "unit": "pack" },
+      { "id": "unscented-3", "name": "Unscented · 3 candles", "price": 999, "unit": "pack" }
+    ],
+    "price": 399,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 11,
+    "name": "Big Bubble Candle",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/big-bubble.webp"
+    ],
+    "desc": "A larger bubble-style candle with a soft sculptural look, ideal for gifting or statement décor.",
+    "variants": [
+      { "id": "mogra-1", "name": "Mogra · 1 candle", "price": 449, "unit": "piece" },
+      { "id": "mogra-2", "name": "Mogra · 2 candles", "price": 849, "unit": "pack" },
+      { "id": "mogra-3", "name": "Mogra · 3 candles", "price": 1249, "unit": "pack" },
+      { "id": "jasmine-1", "name": "Jasmine · 1 candle", "price": 449, "unit": "piece" },
+      { "id": "jasmine-2", "name": "Jasmine · 2 candles", "price": 849, "unit": "pack" },
+      { "id": "jasmine-3", "name": "Jasmine · 3 candles", "price": 1249, "unit": "pack" },
+      { "id": "sandalwood-1", "name": "Sandalwood · 1 candle", "price": 449, "unit": "piece" },
+      { "id": "sandalwood-2", "name": "Sandalwood · 2 candles", "price": 849, "unit": "pack" },
+      { "id": "sandalwood-3", "name": "Sandalwood · 3 candles", "price": 1249, "unit": "pack" },
+      { "id": "unscented-1", "name": "Unscented · 1 candle", "price": 399, "unit": "piece" },
+      { "id": "unscented-2", "name": "Unscented · 2 candles", "price": 749, "unit": "pack" },
+      { "id": "unscented-3", "name": "Unscented · 3 candles", "price": 1099, "unit": "pack" }
+    ],
+    "price": 449,
+    "unit": "piece",
+    "category": "candles"
+  }
+]
