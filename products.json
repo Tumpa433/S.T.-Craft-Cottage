@@ -13,6 +13,18 @@
     "category": "jewellery"
   },
   {
+  "id": 3,
+  "name": "Red Hibiscus Necklace & Earring Set",
+  "icon": "📿",
+  "images": [
+    "assets/images/Jewellery/red-hibiscus.webp"
+  ],
+  "desc": "A vibrant handcrafted red hibiscus necklace and matching floral earrings with green woven cord and wooden beads — perfect for boho styling and lovely for gifting.",
+  "price": 449,
+  "unit": "set",
+  "category": "jewellery"
+},
+  {
     "id": 4,
     "name": "Rose Bloom Glass",
     "icon": "🕯️",
