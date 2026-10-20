@@ -128,6 +128,72 @@ const FALLBACK_PRODUCTS = [
         price: 299,
         unit: 'piece',
         category: 'candles'
+    },
+    {
+        id: 12,
+        name: 'Aqua Flora – Midnight Neel',
+        icon: '🕯️',
+        images: [
+            'assets/images/candles/Royal Blue Edition.webp',
+            'assets/images/candles/Royal Blue Edition1.webp'
+        ],
+        desc: 'Handcrafted Aqua Flora candle in the Royal Blue edition.',
+        price: 79,
+        unit: 'piece',
+        category: 'candles'
+    },
+    {
+        id: 13,
+        name: 'Aqua Flora – Crimson Berry',
+        icon: '🕯️',
+        images: [
+            'assets/images/candles/Deep Wine Edition.webp',
+            'assets/images/candles/Deep Wine Edition1.webp'
+        ],
+        desc: 'Handcrafted Aqua Flora candle in the deep wine and dark plum edition.',
+        price: 79,
+        unit: 'piece',
+        category: 'candles'
+    },
+    {
+        id: 14,
+        name: 'Aqua Flora – Velvet Mauve',
+        icon: '🕯️',
+        images: [
+            'assets/images/candles/Dusty Rose.webp',
+            'assets/images/candles/Dusty Rose1.webp'
+        ],
+        desc: 'Handcrafted Aqua Flora candle in the dusty mauve and plum rose edition.',
+        price: 79,
+        unit: 'piece',
+        category: 'candles'
+    },
+    {
+        id: 15,
+        name: 'Aqua Flora – Lavender Mist',
+        icon: '🕯️',
+        images: [
+            'assets/images/candles/Lilac Edition.webp',
+            'assets/images/candles/Lilac Edition1.webp',
+            'assets/images/candles/Lilac Edition2.webp'
+        ],
+        desc: 'Handcrafted Aqua Flora candle in the soft lilac and lavender edition.',
+        price: 79,
+        unit: 'piece',
+        category: 'candles'
+    },
+    {
+        id: 16,
+        name: 'Aqua Flora – Marigold Sun',
+        icon: '🕯️',
+        images: [
+            'assets/images/candles/Golden Yellow Edition.webp',
+            'assets/images/candles/Golden Yellow Edition1.webp'
+        ],
+        desc: 'Handcrafted Aqua Flora candle in the bright golden yellow edition.',
+        price: 79,
+        unit: 'piece',
+        category: 'candles'
     }
 ];
 
@@ -160,6 +226,7 @@ const state = {
     isLocating: false,
     locationChecked: false,
 };
+let activeProductSearch = '';
 
 // =============================================================
 //  DOM REFS
@@ -496,7 +563,7 @@ function updateCartUI() {
                     <div class="item-info">
                         <span style="font-size:1.4rem;">${item.icon}</span>
                         <span class="qty">${item.qty}</span>
-                        <span class="name">${item.productName || item.name}${item.variantKey && item.name !== item.productName ? `<small>${item.name}${item.selectedColor ? ` · ${item.selectedColor}` : ''}</small>` : ''}</span>
+                        <span class="name">${item.productName || item.name}${item.variantKey && (item.name !== (item.productName || item.name) || item.selectedColor) ? `<small>${[item.name !== (item.productName || item.name) ? item.name : '', item.selectedColor || ''].filter(Boolean).join(' · ')}</small>` : ''}</span>
                     </div>
                     <div style="display:flex;align-items:center;gap:10px;">
                         <span class="item-price">${CONFIG.currency}${item.price * item.qty}</span>
@@ -564,7 +631,8 @@ function getWhatsAppMessage() {
 
     msg += `📋 *Items:*\n`;
     items.forEach(i => {
-        msg += `  • ${i.icon} ${i.productName || i.name}${i.variantKey && i.name !== i.productName ? ` (${i.name}${i.selectedColor ? `, ${i.selectedColor}` : ''})` : ''} × ${i.qty} = ${CONFIG.currency}${i.price * i.qty}\n`;
+        const itemDetails = [i.name !== (i.productName || i.name) ? i.name : '', i.selectedColor || ''].filter(Boolean).join(', ');
+        msg += `  • ${i.icon} ${i.productName || i.name}${itemDetails ? ` (${itemDetails})` : ''} × ${i.qty} = ${CONFIG.currency}${i.price * i.qty}\n`;
     });
     
     msg += `\n💰 *Subtotal:* ${CONFIG.currency}${total}\n`;
@@ -648,30 +716,50 @@ function isLikelySizePrimaryValue(value) {
     return /(small|large|big|standard|medium|duo|mini|pillar|glass|cup)/i.test(normalized);
 }
 
-function renderProducts(containerId, filter = 'all') {
+function renderProducts(containerId, filter = 'all', query = activeProductSearch, productId = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
     
-    let products = CONFIG.products;
+    let products = productId === null
+        ? CONFIG.products
+        : CONFIG.products.filter(product => product.id === productId);
     if (filter !== 'all') {
         products = products.filter(p => p.category === filter);
     }
+    if (query) {
+        const normalizedQuery = query.toLocaleLowerCase();
+        products = products.filter(product => {
+            const searchableText = [
+                product.name,
+                product.desc,
+                product.category,
+                ...(product.colors || []),
+                ...(product.variants || []).map(variant => variant.name)
+            ].join(' ').toLocaleLowerCase();
+            return searchableText.includes(normalizedQuery);
+        });
+    }
     
     if (products.length === 0) {
-        container.innerHTML = `<p style="text-align:center;color:var(--text-muted);">No products found in this category.</p>`;
+        container.innerHTML = `<p style="text-align:center;color:var(--text-muted);">${query ? 'No products match your search.' : 'No products found in this category.'}</p>`;
         return;
     }
     
     container.innerHTML = products.map(p => {
         const images = p.images || (p.image ? [p.image] : []);
+        const detailHref = `product-detail.html?id=${encodeURIComponent(p.id)}`;
+        const detailLinkStart = containerId === 'productDetail' ? '' : `<a class="product-detail-link" href="${detailHref}" aria-label="View ${p.name} details">`;
+        const detailLinkEnd = containerId === 'productDetail' ? '' : '</a>';
         const media = images.length
             ? `<div class="product-gallery">
+                ${detailLinkStart}
                 <img class="icon product-image" src="${images[0]}" alt="${p.name}" loading="lazy">
-                ${images.length > 1 ? `<div class="product-thumbnails" aria-label="More images of ${p.name}">
-                    ${images.map((image, index) => `<button class="product-thumbnail${index === 0 ? ' active' : ''}" type="button" data-image="${image}" aria-label="View image ${index + 1}">
+                ${detailLinkEnd}
+                <div class="product-thumbnails"${images.length > 1 ? ` aria-label="More images of ${p.name}"` : ' aria-hidden="true"'}>
+                    ${images.length > 1 ? images.map((image, index) => `<button class="product-thumbnail${index === 0 ? ' active' : ''}" type="button" data-image="${image}" aria-label="View image ${index + 1}">
                         <img src="${image}" alt="" loading="lazy">
-                    </button>`).join('')}
-                </div>` : ''}
+                    </button>`).join('') : ''}
+                </div>
             </div>`
             : `<span class="icon">${p.icon}</span>`;
 
@@ -705,9 +793,9 @@ function renderProducts(containerId, filter = 'all') {
             : '';
 
         return `
-        <div class="product-card" data-id="${p.id}">
+        <div class="product-card${containerId === 'productDetail' ? ' product-detail-card' : ''}"${containerId === 'productDetail' ? ' id="productDetailCard"' : ''} data-id="${p.id}">
             ${media}
-            <h3>${p.name}</h3>
+            <h3>${detailLinkStart}${p.name}${detailLinkEnd}</h3>
             <p class="desc">${p.desc}</p>
             <div class="variant-area">${variantOptions}</div>
             <div class="price product-price">${CONFIG.currency}${p.variants?.[0]?.price || p.price} <small>/ ${p.variants?.[0]?.unit || p.unit || 'unit'}</small></div>
@@ -816,6 +904,10 @@ function updateVariantCard(card) {
     const price = variant?.price || product.price;
     const unit = variant?.unit || product.unit || 'unit';
     card.querySelector('.product-price').innerHTML = `${CONFIG.currency}${price} <small>/ ${unit}</small>`;
+    const detailPrice = document.getElementById('productDetailPrice');
+    if (card.id === 'productDetailCard' && detailPrice) {
+        detailPrice.textContent = `${CONFIG.currency}${price} / ${unit}`;
+    }
     const color = card.querySelector('.product-color')?.value || '';
     updateColorImage(card, product, color);
     const cartKey = `${product.id}:${variant?.id || 'base'}:${color || 'default'}`;
@@ -867,6 +959,320 @@ function initContactForm() {
 }
 
 // =============================================================
+//  CATEGORY SLIDERS (Home Page)
+// =============================================================
+const CATEGORY_ICONS = {
+    jewellery: 'fa-gem',
+    candles: 'fa-fire-flame-curved',
+    'clay-treasures': 'fa-shapes',
+    'sculpted-candles': 'fa-wand-sparkles',
+    'home-accents': 'fa-house-heart',
+    fabric: 'fa-scissors',
+    default: 'fa-tag'
+};
+
+function getCategoryIcon(category) {
+    const key = category.toLowerCase().replace(/\s+/g, '-');
+    return CATEGORY_ICONS[key] || CATEGORY_ICONS[category] || CATEGORY_ICONS.default;
+}
+
+function renderCategorySliders() {
+    const tabsEl = document.getElementById('catTabs');
+    const slidersEl = document.getElementById('catSliders');
+    if (!tabsEl || !slidersEl) return;
+
+    // Group products by category
+    const categoryMap = {};
+    CONFIG.products.forEach(p => {
+        const cat = p.category || 'other';
+        if (!categoryMap[cat]) categoryMap[cat] = [];
+        categoryMap[cat].push(p);
+    });
+
+    // Desired display order — candles first, jewellery second
+    const CATEGORY_ORDER = ['candles', 'jewellery', 'clay-treasures', 'sculpted-candles', 'home-accents', 'fabric'];
+    const categories = Object.keys(categoryMap).sort((a, b) => {
+        const ai = CATEGORY_ORDER.indexOf(a);
+        const bi = CATEGORY_ORDER.indexOf(b);
+        const aIdx = ai === -1 ? 999 : ai;
+        const bIdx = bi === -1 ? 999 : bi;
+        return aIdx - bIdx;
+    });
+    if (!categories.length) return;
+
+    // Build tab pills
+    tabsEl.innerHTML = categories.map((cat, i) => `
+        <button
+            class="cat-tab-btn${i === 0 ? ' active' : ''}"
+            data-cat="${cat}"
+            role="tab"
+            aria-selected="${i === 0}"
+            aria-controls="cat-panel-${cat}"
+            id="cat-tab-${cat}"
+        >
+            <i class="fas ${getCategoryIcon(cat)}" aria-hidden="true"></i>
+            ${formatCategoryName(cat)}
+            <span class="cat-tab-count">${categoryMap[cat].length}</span>
+        </button>
+    `).join('');
+
+    // Build slider panels
+    slidersEl.innerHTML = categories.map((cat, i) => {
+        const products = categoryMap[cat];
+        const cardsHtml = products.map(p => {
+            const images = p.images || (p.image ? [p.image] : []);
+            const detailHref = `product-detail.html?id=${encodeURIComponent(p.id)}`;
+            const mediaHtml = images.length
+                ? `<a class="product-detail-link" href="${detailHref}" aria-label="View ${p.name} details"><img class="icon product-image" src="${images[0]}" alt="${p.name}" loading="lazy"></a>`
+                : `<span class="icon">${p.icon}</span>`;
+            const displayPrice = p.variants?.[0]?.price || p.price;
+            const displayUnit  = p.variants?.[0]?.unit  || p.unit || 'unit';
+            return `
+            <div class="product-card" data-id="${p.id}">
+                ${mediaHtml}
+                <h3><a class="product-detail-link" href="${detailHref}">${p.name}</a></h3>
+                <p class="desc">${p.desc}</p>
+                <div class="price product-price">${CONFIG.currency}${displayPrice} <small>/ ${displayUnit}</small></div>
+                <button class="btn-add" data-id="${p.id}">
+                    <i class="fas fa-plus"></i> Add to Cart
+                </button>
+            </div>`;
+        }).join('');
+
+        return `
+        <div
+            class="cat-slider-panel${i === 0 ? ' active' : ''}"
+            id="cat-panel-${cat}"
+            role="tabpanel"
+            aria-labelledby="cat-tab-${cat}"
+        >
+            <div class="cat-slider-outer">
+                <button class="slider-arrow prev" aria-label="Previous ${formatCategoryName(cat)} products" data-cat="${cat}">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                </button>
+                <div class="cat-slider-track-wrap">
+                    <div class="cat-slider-track" id="track-${cat}">${cardsHtml}</div>
+                </div>
+                <button class="slider-arrow next" aria-label="Next ${formatCategoryName(cat)} products" data-cat="${cat}">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="slider-dots" id="dots-${cat}"></div>
+            <a class="cat-view-link" href="products.html?cat=${encodeURIComponent(cat)}">
+                View all ${formatCategoryName(cat)} <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </a>
+        </div>`;
+    }).join('');
+
+    // Wire up tabs
+    const tabBtns = tabsEl.querySelectorAll('.cat-tab-btn');
+    const panels  = slidersEl.querySelectorAll('.cat-slider-panel');
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+            panels.forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            btn.setAttribute('aria-selected', 'true');
+            const panel = document.getElementById(`cat-panel-${btn.dataset.cat}`);
+            if (panel) panel.classList.add('active');
+        });
+    });
+
+    // Wire up each slider
+    categories.forEach(cat => {
+        initCategorySlider(cat, categoryMap[cat].length);
+    });
+
+    // Wire up Add-to-Cart (event delegation — covers original + cloned cards)
+    slidersEl.addEventListener('click', e => {
+        const btn = e.target.closest('.btn-add');
+        if (!btn) return;
+        const id = parseInt(btn.dataset.id);
+        addToCart(id, 0, '');
+    });
+}
+
+// =============================================================
+//  TRUE INFINITE CLONE CAROUSEL
+//  Layout: [N front clones] [N originals] [N end clones]
+//  currentPos = card index; start = N; after transition,
+//  silently jump if we've entered clone territory.
+// =============================================================
+function initCategorySlider(cat, total) {
+    const track  = document.getElementById(`track-${cat}`);
+    const dotsEl = document.getElementById(`dots-${cat}`);
+    const panel  = document.getElementById(`cat-panel-${cat}`);
+    if (!track || !dotsEl || !panel) return;
+
+    const prevBtn = panel.querySelector('.slider-arrow.prev');
+    const nextBtn = panel.querySelector('.slider-arrow.next');
+
+    // ── Clone all cards at both ends ──────────────────────────
+    const origCards = [...track.children];   // N originals
+    const N = origCards.length;              // == total
+
+    // Append N end-clones (copies of originals 0..N-1 in order)
+    origCards.forEach(card => {
+        const cl = card.cloneNode(true);
+        cl.setAttribute('aria-hidden', 'true');
+        track.appendChild(cl);
+    });
+
+    // Prepend N front-clones (reverse-insert so order is preserved)
+    [...origCards].reverse().forEach(card => {
+        const cl = card.cloneNode(true);
+        cl.setAttribute('aria-hidden', 'true');
+        track.prepend(cl);
+    });
+    // Track now has 3N cards:
+    //  [0 .. N-1]   front clones  (appear as originals 0..N-1)
+    //  [N .. 2N-1]  real originals
+    //  [2N .. 3N-1] end clones    (appear as originals 0..N-1)
+
+    // ── Responsive visible-card count ─────────────────────────
+    function getVisible() {
+        const w = panel.offsetWidth || window.innerWidth;
+        if (w <= 420) return 1;
+        if (w <= 640) return 2;
+        if (w <= 900) return 2;
+        return 3;
+    }
+
+    const GAP = 24;
+    const ANIM_MS = 450;
+    let currentPos = N;        // card index; starts at first real card
+    let isAnimating = false;
+
+    function cardWidth() {
+        return track.querySelector('.product-card')?.offsetWidth || 260;
+    }
+
+    // ── Low-level move ─────────────────────────────────────────
+    function moveTo(pos, animate) {
+        track.style.transition = animate
+            ? `transform ${ANIM_MS}ms cubic-bezier(0.25,0.46,0.45,0.94)`
+            : 'none';
+        track.style.transform = `translateX(-${pos * (cardWidth() + GAP)}px)`;
+        if (!animate) void track.offsetHeight; // flush reflow
+    }
+
+    // ── Dots ───────────────────────────────────────────────────
+    function pageCount() { return Math.ceil(N / getVisible()); }
+
+    function realPage() {
+        // Map currentPos back to an original-card index, then to a page
+        const realCard = ((currentPos - N) % N + N) % N;
+        return Math.floor(realCard / getVisible());
+    }
+
+    function buildDots() {
+        const pages = pageCount();
+        dotsEl.innerHTML = Array.from({ length: pages }, (_, i) =>
+            `<span class="slider-dot" data-page="${i}" aria-label="Page ${i + 1}"></span>`
+        ).join('');
+        updateDots();
+        dotsEl.querySelectorAll('.slider-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                if (isAnimating) return;
+                currentPos = N + parseInt(dot.dataset.page) * getVisible();
+                moveTo(currentPos, true);
+                updateDots();
+                resetAutoplay();
+            });
+        });
+    }
+
+    function updateDots() {
+        const pg = realPage();
+        dotsEl.querySelectorAll('.slider-dot').forEach((d, i) =>
+            d.classList.toggle('active', i === pg)
+        );
+    }
+
+    // ── Step (circular) ────────────────────────────────────────
+    function step(dir) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        currentPos += dir * getVisible();
+        moveTo(currentPos, true);
+        updateDots();
+
+        setTimeout(() => {
+            // Seamless jump if we slid into clone territory
+            if (currentPos >= 2 * N) {
+                currentPos -= N;
+                moveTo(currentPos, false);
+            } else if (currentPos < N) {
+                currentPos += N;
+                moveTo(currentPos, false);
+            }
+            updateDots();
+            isAnimating = false;
+        }, ANIM_MS + 20);
+    }
+
+    // ── Auto-play ──────────────────────────────────────────────
+    const AUTO_MS = 3000;
+    let autoTimer = null;
+
+    function startAutoplay() {
+        if (autoTimer) return;
+        autoTimer = setInterval(() => step(1), AUTO_MS);
+    }
+    function stopAutoplay() {
+        clearInterval(autoTimer);
+        autoTimer = null;
+    }
+    function resetAutoplay() { stopAutoplay(); startAutoplay(); }
+
+    // ── Pause on hover / touch ─────────────────────────────────
+    panel.addEventListener('mouseenter', stopAutoplay);
+    panel.addEventListener('mouseleave', startAutoplay);
+    panel.addEventListener('touchstart', stopAutoplay, { passive: true });
+    panel.addEventListener('touchend',   startAutoplay, { passive: true });
+
+    // ── Swipe ──────────────────────────────────────────────────
+    let touchStartX = 0;
+    track.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    track.addEventListener('touchend', e => {
+        const delta = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(delta) > 40) { step(delta > 0 ? 1 : -1); resetAutoplay(); }
+    }, { passive: true });
+
+    // ── Arrow buttons ──────────────────────────────────────────
+    if (prevBtn) {
+        prevBtn.disabled = false;
+        prevBtn.addEventListener('click', () => { step(-1); resetAutoplay(); });
+    }
+    if (nextBtn) {
+        nextBtn.disabled = false;
+        nextBtn.addEventListener('click', () => { step(1); resetAutoplay(); });
+    }
+
+    // ── Init ───────────────────────────────────────────────────
+    buildDots();
+    moveTo(currentPos, false);
+    startAutoplay();
+
+    // ── Resize ─────────────────────────────────────────────────
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            stopAutoplay();
+            currentPos = N; // reset to first real card
+            buildDots();
+            moveTo(currentPos, false);
+            startAutoplay();
+        }, 200);
+    });
+}
+
+
+// =============================================================
 //  FILTERS
 // =============================================================
 function initFilters() {
@@ -901,25 +1307,91 @@ function formatCategoryName(category) {
         .join(' ');
 }
 
+function alignCurrentHashTarget() {
+    if (!window.location.hash) return;
+    const targetId = decodeURIComponent(window.location.hash.slice(1));
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    const headerHeight = document.getElementById('header')?.getBoundingClientRect().height || 0;
+    const previousScrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.scrollY - headerHeight - 16));
+    document.documentElement.style.scrollBehavior = previousScrollBehavior;
+}
+
 // =============================================================
 //  NAV TOGGLE
 // =============================================================
 function initNav() {
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
+    const links = navLinks ? [...navLinks.querySelectorAll('a')] : [];
+    const updateActiveAnchor = () => {
+        const currentUrl = new URL(window.location.href);
+        const activeLink = links.find(link => {
+            const linkUrl = new URL(link.href, window.location.href);
+            return linkUrl.pathname === currentUrl.pathname
+                && linkUrl.hash
+                && linkUrl.hash === currentUrl.hash
+                && document.querySelector(linkUrl.hash);
+        });
+        if (activeLink) {
+            links.forEach(link => link.classList.toggle('active', link === activeLink));
+        }
+    };
+
+    updateActiveAnchor();
+    window.addEventListener('hashchange', () => {
+        updateActiveAnchor();
+        requestAnimationFrame(() => requestAnimationFrame(alignCurrentHashTarget));
+    });
     
     if (hamburger && navLinks) {
         hamburger.addEventListener('click', () => {
             hamburger.classList.toggle('active');
             navLinks.classList.toggle('open');
+            const isOpen = navLinks.classList.contains('open');
+            hamburger.setAttribute('aria-expanded', String(isOpen));
+            hamburger.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
         });
-        document.querySelectorAll('.nav-links a').forEach(link => {
+        links.forEach(link => {
             link.addEventListener('click', () => {
+                const linkUrl = new URL(link.href, window.location.href);
+                if (linkUrl.pathname === window.location.pathname && linkUrl.hash && document.querySelector(linkUrl.hash)) {
+                    links.forEach(item => item.classList.toggle('active', item === link));
+                }
                 hamburger.classList.remove('active');
                 navLinks.classList.remove('open');
+                hamburger.setAttribute('aria-expanded', 'false');
+                hamburger.setAttribute('aria-label', 'Open navigation');
             });
         });
     }
+}
+
+function initHeroGallery() {
+    const gallery = document.querySelector('.hero-carousel');
+    const pages = document.querySelectorAll('.gallery-pages span');
+    const buttons = document.querySelectorAll('.gallery-arrow');
+    if (!gallery || !pages.length || buttons.length < 2) return;
+
+    let activePage = 0;
+    const updatePage = () => {
+        pages.forEach((page, index) => page.classList.toggle('active', index === activePage));
+    };
+
+    buttons[0].addEventListener('click', () => {
+        gallery.prepend(gallery.lastElementChild);
+        activePage = (activePage + pages.length - 1) % pages.length;
+        updatePage();
+    });
+
+    buttons[1].addEventListener('click', () => {
+        gallery.append(gallery.firstElementChild);
+        activePage = (activePage + 1) % pages.length;
+        updatePage();
+    });
 }
 
 // =============================================================
@@ -949,18 +1421,88 @@ function updateCatalogStats() {
 // =============================================================
 async function init() {
     await loadProducts();
+    activeProductSearch = new URLSearchParams(window.location.search).get('q')?.trim() || '';
+    const searchInput = document.getElementById('heroSearch');
+    if (searchInput) searchInput.value = activeProductSearch;
+    document.querySelectorAll('.header-search').forEach(form => {
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const query = form.querySelector('input[name="q"]')?.value.trim() || '';
+            const destination = new URL('products.html', window.location.href);
+            if (query) destination.searchParams.set('q', query);
+            window.location.assign(destination);
+        });
+    });
 
     // Load cart from localStorage
     loadCart();
     updateCatalogStats();
     
     // Render products on all pages
-    if (document.getElementById('featuredProducts')) {
-        renderProducts('featuredProducts');
+    if (document.getElementById('catSliders')) {
+        renderCategorySliders();
     }
     if (document.getElementById('allProducts')) {
         renderProducts('allProducts');
+        const description = document.querySelector('.page-header p');
+        const defaultDescription = description?.textContent || '';
+        if (activeProductSearch) {
+            if (description) description.textContent = `Showing results for "${activeProductSearch}"`;
+        }
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                activeProductSearch = searchInput.value.trim();
+                renderProducts('allProducts');
+                if (description) {
+                    description.textContent = activeProductSearch
+                        ? `Showing results for "${activeProductSearch}"`
+                        : defaultDescription;
+                }
+
+                const params = new URLSearchParams(window.location.search);
+                if (activeProductSearch) {
+                    params.set('q', activeProductSearch);
+                } else {
+                    params.delete('q');
+                }
+                const queryString = params.toString();
+                window.history.replaceState(
+                    null,
+                    '',
+                    `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`
+                );
+            });
+        }
     }
+    const detailContainer = document.getElementById('productDetail');
+    if (detailContainer) {
+        const requestedId = Number.parseInt(new URLSearchParams(window.location.search).get('id') || '', 10);
+        const product = CONFIG.products.find(item => item.id === requestedId);
+        if (product) {
+            renderProducts('productDetail', 'all', '', requestedId);
+            const breadcrumbName = document.getElementById('productBreadcrumbName');
+            if (breadcrumbName) breadcrumbName.textContent = product.name;
+            const detailInfo = document.getElementById('productDetailInfo');
+            if (detailInfo) {
+                detailInfo.innerHTML = `
+                    <p class="product-detail-eyebrow">${formatCategoryName(product.category)}</p>
+                    <h2>${product.name}</h2>
+                    <p>${product.desc}</p>
+                    <dl class="product-detail-facts">
+                        <div><dt>Category</dt><dd>${formatCategoryName(product.category)}</dd></div>
+                        <div><dt>Price</dt><dd id="productDetailPrice">${CONFIG.currency}${product.variants?.[0]?.price || product.price} / ${product.variants?.[0]?.unit || product.unit || 'unit'}</dd></div>
+                    </dl>
+                    <a class="product-detail-back" href="products.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to collection</a>
+                `;
+            }
+            document.title = `${product.name} — S.T. Craft Cottage`;
+        } else {
+            detailContainer.innerHTML = '<p class="product-detail-not-found">This product could not be found. <a href="products.html">Browse the collection</a>.</p>';
+            document.getElementById('productDetailInfo')?.remove();
+        }
+    }
+    requestAnimationFrame(() => requestAnimationFrame(alignCurrentHashTarget));
+    window.addEventListener('load', alignCurrentHashTarget, { once: true });
     
     // Update cart UI
     updateCartUI();
@@ -992,6 +1534,7 @@ async function init() {
     
     // Navigation
     initNav();
+    initHeroGallery();
     initScroll();
     
     /* Location auto-check disabled for now

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>S.T. Craft Cottage - Handmade with heart</title>
     <meta name="description" content="Thoughtful handmade jewellery, clay decor, candles, fabric crafts and more from S.T. Craft Cottage." />
+    <link rel="icon" type="image/png" href="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" />
+    <link rel="apple-touch-icon" href="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" />
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,92 +20,131 @@
     <header class="header" id="header">
         <div class="container">
             <a href="index.html" class="logo">
-                <i class="fas fa-seedling"></i>
-                S.T. <span>Craft Cottage</span>
+                <img src="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" alt="" />
+                <span class="logo-name">S.T. Craft Cottage</span>
             </a>
 
             <nav class="nav-links" id="navLinks">
                 <a href="index.html" class="active">Home</a>
                 <a href="products.html">Products</a>
-                <a href="cart.html">Cart <span class="cart-badge" id="navCartBadge">0</span></a>
+                <a href="#hero-categories">Categories</a>
+                <a href="#about">About</a>
                 <a href="contact.html">Contact</a>
-                <a href="products.html" class="nav-cta">Order Now</a>
             </nav>
-            
-            <div class="hamburger" id="hamburger">
+
+            <form class="header-search" action="products.html" role="search">
+                <label class="sr-only" for="heroSearch">Search handmade products</label>
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input id="heroSearch" name="q" type="search" placeholder="Search handmade products..." />
+                <button type="submit" aria-label="Search"><i class="fas fa-arrow-right"></i></button>
+            </form>
+
+            <a class="header-cart" href="cart.html" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <span class="cart-badge" id="navCartBadge">0</span>
+            </a>
+            <a href="products.html" class="nav-cta header-cta">Order Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+
+            <button class="hamburger" id="hamburger" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
                 <span></span><span></span><span></span>
-            </div>
+            </button>
         </div>
     </header>
 
     <!-- ===== HERO SECTION ===== -->
     <section class="hero" id="hero">
-        <div class="container">
-            <div class="hero-grid">
-                <div class="hero-content">
-                    <h1>
-                        Little things,<br />
-                        <span class="highlight">made by hand.</span>
-                    </h1>
-                    <p>
-                        A warm collection of handmade jewellery, clay treasures, candles,
-                        fabric finds and home accents made to make everyday moments special.
-                    </p>
-                    <div class="hero-buttons">
-                        <a href="products.html" class="btn-primary">
-                            <i class="fas fa-shopping-bag"></i> Shop the collection
-                        </a>
-                        <a href="#products" class="btn-secondary">
-                            <i class="fas fa-arrow-down"></i> Explore the collection
-                        </a>
-                    </div>
-                    <div class="hero-stats">
-                        <div class="stat">
-                            <h3 id="productCount">0</h3>
-                            <p>Products in collection</p>
-                        </div>
-                        <div class="stat">
-                            <h3 id="categoryCount">0</h3>
-                            <p>Handmade categories</p>
-                        </div>
-                        <div class="stat">
-                            <h3>100%</h3>
-                            <p>Made with care</p>
-                        </div>
-                    </div>
+        <svg class="hero-clip-defs" aria-hidden="true" focusable="false">
+            <defs>
+                <clipPath id="hero-image-clip" clipPathUnits="objectBoundingBox">
+                    <path d="M .5 0 C .25 0 .08 .17 .04 .41 C 0 .66 .14 .88 .36 .94 C .55 1 .7 .91 .83 .87 C .92 .84 .97 .93 1 .97 L 1 0 Z" />
+                </clipPath>
+            </defs>
+        </svg>
+        <div class="hero-main">
+            <div class="hero-content">
+                <div class="hero-eyebrow"><i class="fas fa-seedling" aria-hidden="true"></i> HANDCRAFTED <span>•</span> SUSTAINABLE <span>•</span> MADE WITH LOVE</div>
+                <h1>Little things,<br /><span class="highlight">made by hand.</span></h1>
+                <p>A warm collection of handmade jewellery, clay treasures, candles, fabric finds and home accents made to make everyday moments special.</p>
+                <div class="hero-buttons">
+                    <a href="products.html" class="btn-primary"><i class="fas fa-shopping-bag" aria-hidden="true"></i> Shop the collection <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
-                <div class="hero-image">
-                    <div class="flower-ring">
-                        <img class="hero-photo" src="assets/images/candles/aura_waves_white-blue.webp" alt="Aura Waves twisted candle in white, pink and yellow" />
-                        <div class="hero-art-label">THE<br /><strong>HANDMADE</strong><br />EDIT</div>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-sparkles"></i> Crafted with care
-                    </div>
+                <div class="hero-benefits" aria-label="Why shop with us">
+                    <div class="hero-benefit"><span class="benefit-icon"><i class="fas fa-leaf" aria-hidden="true"></i></span><strong>100%</strong><span>Handmade</span></div>
+                    <div class="hero-benefit"><span class="benefit-icon green"><i class="fas fa-leaf" aria-hidden="true"></i></span><strong>Eco-friendly</strong><span>Materials</span></div>
+                    <div class="hero-benefit"><span class="benefit-icon"><i class="fas fa-truck" aria-hidden="true"></i></span><strong>Fast &amp; Safe</strong><span>Delivery</span></div>
+                    <div class="hero-benefit"><span class="benefit-icon"><i class="fas fa-gift" aria-hidden="true"></i></span><strong>Perfect</strong><span>For Gifting</span></div>
                 </div>
             </div>
 
+            <div class="hero-art" aria-label="Handmade candle collection">
+                <div class="hero-art-orbit" aria-hidden="true"></div>
+                <div class="hero-art-frame">
+                    <img src="assets/images/candles/small-glass-rose1.webp" alt="Glass rose candles styled with baby's breath flowers" />
+                </div>
+            </div>
+
+            <div class="hero-side">
+                <p class="hero-handwritten">Handmade<br />for a brighter<br />tomorrow <span>♡</span></p>
+                <div class="hero-carousel">
+                    <a class="hero-product-card" href="products.html">
+                        <img src="assets/images/Jewellery/pink-flower.webp" alt="Pink blossom handmade jewellery" />
+                        <span>Jewellery <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                    </a>
+                    <a class="hero-product-card" href="products.html">
+                        <img src="assets/images/candles/small-glass-rose2.webp" alt="Handmade rose glass candle" />
+                        <span>Candles <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                    </a>
+                    <a class="hero-product-card" href="products.html">
+                        <img src="assets/images/candles/Mrittika%20Mini%20Cup.webp" alt="Handmade clay candle cups" />
+                        <span>Clay Treasures <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                    </a>
+                </div>
+                <div class="hero-gallery-controls" aria-label="Featured product cards">
+                    <button type="button" class="gallery-arrow" aria-label="Previous featured products"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                    <div class="gallery-pages"><span class="active">01</span><span>02</span><span>03</span></div>
+                    <button type="button" class="gallery-arrow" aria-label="Next featured products"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-category-dock" id="hero-categories">
+            <svg class="hero-wave" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 76 C105 25 182 12 292 25 C405 39 470 46 566 27 C663 8 721 4 820 18 C925 34 980 49 1085 30 C1193 11 1282 17 1440 63 L1440 190 L0 190 Z" />
+            </svg>
+            <a class="hero-category" href="products.html"><span><img src="assets/images/Jewellery/pink-flower.webp" alt="" /></span><strong>Jewellery</strong></a>
+            <a class="hero-category" href="products.html"><span><img src="assets/images/candles/Mrittika%20Mini%20Cup.webp" alt="" /></span><strong>Clay Treasures</strong></a>
+            <a class="hero-category" href="products.html"><span><img src="assets/images/candles/small-glass-rose2.webp" alt="" /></span><strong>Candles</strong></a>
+            <a class="hero-category" href="products.html"><span><img src="assets/images/candles/aura_waves_white-blue.webp" alt="" /></span><strong>Sculpted Candles</strong></a>
+            <a class="hero-category" href="products.html"><span><img src="assets/images/candles/Coastal%20Shells.webp" alt="" /></span><strong>Home Accents</strong></a>
+            <a class="hero-explore" href="products.html"><span>Explore<br />Our Categories <i class="fas fa-arrow-right" aria-hidden="true"></i></span></a>
         </div>
     </section>
 
-    <!-- ===== FEATURED PRODUCTS ===== -->
-    <section class="products" id="products">
+    <!-- ===== CATEGORY SLIDER SECTION ===== -->
+    <section class="products cat-slider-section" id="products">
         <div class="container">
             <div class="section-header">
                 <h2><i class="fas fa-star"></i> Made for your space</h2>
-                <p>A few handmade favourites to start your browse</p>
+                <p>Shop by category — swipe through our handmade collection</p>
                 <a href="products.html" class="view-all-btn">
                     View All Products <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
-            <div class="product-grid" id="featuredProducts">
-                <!-- Products injected by JS -->
+
+            <!-- Category Tab Pills -->
+            <div class="cat-tabs" id="catTabs" role="tablist" aria-label="Product categories">
+                <!-- Tabs injected by JS -->
+            </div>
+
+            <!-- Per-Category Sliders -->
+            <div class="cat-sliders" id="catSliders">
+                <!-- Sliders injected by JS -->
             </div>
         </div>
     </section>
 
     <!-- ===== WHY CHOOSE US ===== -->
-    <section class="features">
+    <section class="features" id="about">
         <div class="container">
             <div class="section-header">
                 <h2><i class="fas fa-heart"></i> The cottage promise</h2>

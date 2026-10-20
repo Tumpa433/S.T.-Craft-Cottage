@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product details — S.T. Craft Cottage</title>
+    <link rel="icon" type="image/png" href="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" />
+    <link rel="apple-touch-icon" href="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header class="header" id="header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" alt="" />
+                <span class="logo-name">S.T. Craft Cottage</span>
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="products.html" class="active">Products</a>
+                <a href="index.html#hero-categories">Categories</a>
+                <a href="index.html#about">About</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            <form class="header-search" action="products.html" role="search">
+                <label class="sr-only" for="heroSearch">Search handmade products</label>
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input id="heroSearch" name="q" type="search" placeholder="Search handmade products..." />
+                <button type="submit" aria-label="Search"><i class="fas fa-arrow-right"></i></button>
+            </form>
+            <a class="header-cart" href="cart.html" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <span class="cart-badge" id="navCartBadge">0</span>
+            </a>
+            <a href="products.html" class="nav-cta header-cta">Order Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            <button class="hamburger" id="hamburger" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <main class="product-detail-page">
+        <div class="container">
+            <nav class="product-breadcrumb" aria-label="Breadcrumb">
+                <a href="index.html">Home</a><span aria-hidden="true">/</span>
+                <a href="products.html">Products</a><span aria-hidden="true">/</span>
+                <span id="productBreadcrumbName">Details</span>
+            </nav>
+            <div class="product-detail-layout">
+                <div id="productDetail" class="product-detail-product" aria-live="polite"></div>
+                <aside id="productDetailInfo" class="product-detail-info"></aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-leaf"></i> S.T. Craft Cottage</h3>
+                    <p>Handmade jewellery, decor and little joys, made thoughtfully in small batches.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +91 96747 24587</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> +91 70032 19312</a></li>
+                        <li><a href="#"><i class="fas fa-envelope"></i> hello@stcraftcottage.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 S.T. Craft Cottage — Made with <i class="fas fa-heart" style="color:#E8B84B;"></i> by hand.
+            </div>
+        </div>
+    </footer>
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="script.js"></script>
+</body>
+</html>

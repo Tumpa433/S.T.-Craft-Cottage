@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>S.T. Craft Cottage - Contact</title>
+    <link rel="icon" type="image/png" href="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" />
+    <link rel="apple-touch-icon" href="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -16,21 +18,27 @@
     <header class="header" id="header">
         <div class="container">
             <a href="index.html" class="logo">
-                <i class="fas fa-seedling"></i>
-                S.T. <span>Craft Cottage</span>
+                <img src="assets/S.T.%20Craft%20Cottage%20Candle%20Logo.png" alt="" />
+                <span class="logo-name">S.T. Craft Cottage</span>
             </a>
 
             <nav class="nav-links" id="navLinks">
                 <a href="index.html">Home</a>
                 <a href="products.html">Products</a>
-                <a href="cart.html">Cart <span class="cart-badge" id="navCartBadge">0</span></a>
+                <a href="index.html#hero-categories">Categories</a>
+                <a href="index.html#about">About</a>
                 <a href="contact.html" class="active">Contact</a>
-                <a href="products.html" class="nav-cta">Order Now</a>
             </nav>
-            
-            <div class="hamburger" id="hamburger">
+
+            <a class="header-cart" href="cart.html" aria-label="Shopping cart">
+                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                <span class="cart-badge" id="navCartBadge">0</span>
+            </a>
+            <a href="products.html" class="nav-cta header-cta">Order Now <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+
+            <button class="hamburger" id="hamburger" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="navLinks">
                 <span></span><span></span><span></span>
-            </div>
+            </button>
         </div>
     </header>
 

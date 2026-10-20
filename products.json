@@ -237,5 +237,71 @@
     "price": 449,
     "unit": "piece",
     "category": "candles"
+  },
+  {
+    "id": 12,
+    "name": "Aqua Flora – Midnight Neel",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Royal Blue Edition.webp",
+      "assets/images/candles/Royal Blue Edition1.webp"
+    ],
+    "desc": "Handcrafted Aqua Flora candle in the Royal Blue edition.",
+    "price": 79,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 13,
+    "name": "Aqua Flora – Crimson Berry",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Deep Wine Edition.webp",
+      "assets/images/candles/Deep Wine Edition1.webp"
+    ],
+    "desc": "Handcrafted Aqua Flora candle in the deep wine and dark plum edition.",
+    "price": 79,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 14,
+    "name": "Aqua Flora – Velvet Mauve",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Dusty Rose.webp",
+      "assets/images/candles/Dusty Rose1.webp"
+    ],
+    "desc": "Handcrafted Aqua Flora candle in the dusty mauve and plum rose edition.",
+    "price": 79,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 15,
+    "name": "Aqua Flora – Lavender Mist",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Lilac Edition.webp",
+      "assets/images/candles/Lilac Edition1.webp",
+      "assets/images/candles/Lilac Edition2.webp"
+    ],
+    "desc": "Handcrafted Aqua Flora candle in the soft lilac and lavender edition.",
+    "price": 79,
+    "unit": "piece",
+    "category": "candles"
+  },
+  {
+    "id": 16,
+    "name": "Aqua Flora – Marigold Sun",
+    "icon": "🕯️",
+    "images": [
+      "assets/images/candles/Golden Yellow Edition.webp",
+      "assets/images/candles/Golden Yellow Edition1.webp"
+    ],
+    "desc": "Handcrafted Aqua Flora candle in the bright golden yellow edition.",
+    "price": 79,
+    "unit": "piece",
+    "category": "candles"
   }
 ]
