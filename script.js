@@ -28,6 +28,36 @@ const FALLBACK_PRODUCTS = [
         category: 'jewellery'
     },
     {
+        id: 17,
+        name: 'Red Hibiscus Necklace & Earring Set',
+        icon: '📿',
+        images: ['assets/images/Jewellery/red-hibiscus.webp'],
+        desc: 'A vibrant handcrafted red hibiscus necklace and matching floral earrings with green woven cord and wooden beads — perfect for boho styling and lovely for gifting.',
+        price: 449,
+        unit: 'set',
+        category: 'jewellery'
+    },
+    {
+        id: 18,
+        name: 'Black Batik Choker Set',
+        icon: '📿',
+        images: ['assets/images/jewellery/Black Batik Choker Set.png'],
+        desc: 'A handcrafted black batik choker set, made to add a bold artisan touch to everyday and occasion looks.',
+        price: 149,
+        unit: 'set',
+        category: 'jewellery'
+    },
+    {
+        id: 19,
+        name: 'Maroon Coin Necklace Set',
+        icon: '📿',
+        images: ['assets/images/jewellery/Maroon Coin Necklace Set.png'],
+        desc: 'A handcrafted maroon coin necklace set, styled for festive outfits and thoughtful gifting.',
+        price: 149,
+        unit: 'set',
+        category: 'jewellery'
+    },
+    {
         id: 4,
         name: 'Rose Bloom Glass',
         icon: '🕯️',
@@ -36,7 +66,7 @@ const FALLBACK_PRODUCTS = [
             'assets/images/candles/small-glass-rose1.webp',
             'assets/images/candles/small-glass-rose.webp'
         ],
-        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your glass quantity and available colour.',
+        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented. Sold individually, per piece.',
         variants: [
             { id: 'mogra-1', name: 'Mogra · 1 glass', price: 149, unit: 'piece' },
             { id: 'mogra-2', name: 'Mogra · 2 glasses', price: 279, unit: 'pack' },
@@ -66,7 +96,7 @@ const FALLBACK_PRODUCTS = [
             'White & Blue': 'assets/images/candles/aura_waves_white-blue.webp',
             'White, Pink & Yellow': 'assets/images/candles/aura_waves_white-pink-yellow.webp'
         },
-        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your candle quantity and available colour.',
+        desc: 'Choose your scent and available colour. Each candle is sold individually.',
         variants: [
             { id: 'mogra-1', name: 'Mogra · 1 candle', price: 249, unit: 'piece' },
             { id: 'mogra-3', name: 'Mogra · 3 candles', price: 699, unit: 'pack' },
@@ -96,7 +126,7 @@ const FALLBACK_PRODUCTS = [
             'Ocean Blue': 'assets/images/candles/Coastal Shells2.webp',
             'Buttery Yellow': 'assets/images/candles/Coastal Shells1.webp'
         },
-        desc: 'Choose Mogra, Jasmine, Sandalwood, or unscented, then select your available colour.',
+        desc: 'Choose your scent and available colour. Sold individually, per piece.',
         variants: [
             { id: 'mogra', name: 'Mogra', price: 599, unit: 'piece' },
             { id: 'jasmine', name: 'Jasmine', price: 599, unit: 'piece' },
@@ -114,7 +144,7 @@ const FALLBACK_PRODUCTS = [
         images: [
             'assets/images/candles/Mrittika Stem Glass.webp'
         ],
-        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented, then select your stem glass quantity.',
+        desc: 'Choose Mogra, Jasmine, Sandalwood or unscented. Sold individually, per piece.',
         variants: [
             { id: 'mogra-1', name: 'Mogra · 1 stem glass', price: 299, unit: 'piece' },
             { id: 'mogra-3', name: 'Mogra · 3 stem glasses', price: 599, unit: 'pack' },
@@ -138,6 +168,10 @@ const FALLBACK_PRODUCTS = [
             'assets/images/candles/Royal Blue Edition1.webp'
         ],
         desc: 'Handcrafted Aqua Flora candle in the Royal Blue edition.',
+        variants: [
+            { id: 'scented', name: 'Scented', price: 79, unit: 'piece' },
+            { id: 'unscented', name: 'Unscented', price: 79, unit: 'piece' }
+        ],
         price: 79,
         unit: 'piece',
         category: 'candles'
@@ -151,6 +185,10 @@ const FALLBACK_PRODUCTS = [
             'assets/images/candles/Deep Wine Edition1.webp'
         ],
         desc: 'Handcrafted Aqua Flora candle in the deep wine and dark plum edition.',
+        variants: [
+            { id: 'scented', name: 'Scented', price: 79, unit: 'piece' },
+            { id: 'unscented', name: 'Unscented', price: 79, unit: 'piece' }
+        ],
         price: 79,
         unit: 'piece',
         category: 'candles'
@@ -164,6 +202,10 @@ const FALLBACK_PRODUCTS = [
             'assets/images/candles/Dusty Rose1.webp'
         ],
         desc: 'Handcrafted Aqua Flora candle in the dusty mauve and plum rose edition.',
+        variants: [
+            { id: 'scented', name: 'Scented', price: 79, unit: 'piece' },
+            { id: 'unscented', name: 'Unscented', price: 79, unit: 'piece' }
+        ],
         price: 79,
         unit: 'piece',
         category: 'candles'
@@ -178,6 +220,10 @@ const FALLBACK_PRODUCTS = [
             'assets/images/candles/Lilac Edition2.webp'
         ],
         desc: 'Handcrafted Aqua Flora candle in the soft lilac and lavender edition.',
+        variants: [
+            { id: 'scented', name: 'Scented', price: 79, unit: 'piece' },
+            { id: 'unscented', name: 'Unscented', price: 79, unit: 'piece' }
+        ],
         price: 79,
         unit: 'piece',
         category: 'candles'
@@ -191,6 +237,10 @@ const FALLBACK_PRODUCTS = [
             'assets/images/candles/Golden Yellow Edition1.webp'
         ],
         desc: 'Handcrafted Aqua Flora candle in the bright golden yellow edition.',
+        variants: [
+            { id: 'scented', name: 'Scented', price: 79, unit: 'piece' },
+            { id: 'unscented', name: 'Unscented', price: 79, unit: 'piece' }
+        ],
         price: 79,
         unit: 'piece',
         category: 'candles'
@@ -227,6 +277,7 @@ const state = {
     locationChecked: false,
 };
 let activeProductSearch = '';
+let activeProductCategory = 'all';
 
 // =============================================================
 //  DOM REFS
@@ -458,11 +509,7 @@ function addToCart(productId, variantIndex = 0, selectedColor = '') {
     showToast(`✅ Added ${product.name}${variant ? ` (${variant.name})` : ''} to cart`, 'success', 2500);
 
     // Keep the add control in sync with the quantity for this variant.
-    const btn = document.querySelector(`.btn-add[data-id="${productId}"]`);
-    if (btn) {
-        btn.classList.add('in-cart');
-        btn.innerHTML = `<i class="fas fa-plus"></i> Add one more <small>(${existing ? existing.qty : 1} in basket)</small>`;
-    }
+    document.querySelectorAll(`.product-card[data-id="${productId}"]`).forEach(card => updateVariantCard(card));
 }
 
 function removeFromCart(cartKey) {
@@ -711,6 +758,47 @@ function getVariantGroups(product) {
     return groups;
 }
 
+function getSinglePieceVariantIndexes(product) {
+    if (!product.variants?.length) return [];
+    return product.variants
+        .map((variant, index) => ({ variant, index }))
+        .filter(({ variant }) => variant.unit === 'piece' || /\b1\s+(?:candle|glass|stem glass|mini cup)\b/i.test(variant.name))
+        .map(({ index }) => index);
+}
+
+function getCandleScentName(variant) {
+    return String(variant.name || '').split(' · ')[0].trim();
+}
+
+function getDefaultVariantIndex(product) {
+    if (product.category === 'candles') {
+        return getSinglePieceVariantIndexes(product)[0] ?? 0;
+    }
+    return 0;
+}
+
+function getCandleOptionsMarkup(product) {
+    const pieceIndexes = getSinglePieceVariantIndexes(product);
+    const scents = [...new Set(pieceIndexes.map(index => getCandleScentName(product.variants[index])))];
+    const scentSelect = scents.length
+        ? `<label class="product-option"><span>Scent</span><select class="product-scent" aria-label="Choose scent">${scents.map(scent => `<option value="${scent}">${scent}</option>`).join('')}</select></label>`
+        : '';
+    const colorSelect = product.colors?.length
+        ? `<label class="product-option"><span>Colour</span><select class="product-color" aria-label="Choose colour">${product.colors.map(color => `<option value="${color}">${color}</option>`).join('')}</select></label>`
+        : '';
+    return scentSelect || colorSelect
+        ? `<div class="product-options${scentSelect && colorSelect ? ' product-options-paired' : ''}">${scentSelect}${colorSelect}</div>`
+        : '';
+}
+
+function getInitialProductPrice(product) {
+    const variant = product.variants?.[getDefaultVariantIndex(product)];
+    return {
+        price: variant?.price || product.price,
+        unit: variant?.unit || product.unit || 'unit'
+    };
+}
+
 function isLikelySizePrimaryValue(value) {
     const normalized = String(value || '').toLowerCase();
     return /(small|large|big|standard|medium|duo|mini|pillar|glass|cup)/i.test(normalized);
@@ -750,11 +838,13 @@ function renderProducts(containerId, filter = 'all', query = activeProductSearch
         const detailHref = `product-detail.html?id=${encodeURIComponent(p.id)}`;
         const detailLinkStart = containerId === 'productDetail' ? '' : `<a class="product-detail-link" href="${detailHref}" aria-label="View ${p.name} details">`;
         const detailLinkEnd = containerId === 'productDetail' ? '' : '</a>';
+        const imageFrameStart = containerId === 'productDetail' ? '<div class="product-gallery-image-frame">' : detailLinkStart;
+        const imageFrameEnd = containerId === 'productDetail' ? '</div>' : detailLinkEnd;
         const media = images.length
             ? `<div class="product-gallery">
-                ${detailLinkStart}
+                ${imageFrameStart}
                 <img class="icon product-image" src="${images[0]}" alt="${p.name}" loading="lazy">
-                ${detailLinkEnd}
+                ${imageFrameEnd}
                 <div class="product-thumbnails"${images.length > 1 ? ` aria-label="More images of ${p.name}"` : ' aria-hidden="true"'}>
                     ${images.length > 1 ? images.map((image, index) => `<button class="product-thumbnail${index === 0 ? ' active' : ''}" type="button" data-image="${image}" aria-label="View image ${index + 1}">
                         <img src="${image}" alt="" loading="lazy">
@@ -773,7 +863,9 @@ function renderProducts(containerId, filter = 'all', query = activeProductSearch
         const defaultPrimaryValue = primaryValues[0] || '';
         const defaultSecondaryValues = primaryValues.length ? [...new Set((variantGroups[defaultPrimaryValue] || []))] : [];
 
-        const variantOptions = (p.variants?.length || p.colors?.length)
+        const variantOptions = p.category === 'candles'
+            ? getCandleOptionsMarkup(p)
+            : (p.variants?.length || p.colors?.length)
             ? `${p.variants?.length ? (variantFieldLabel === 'Quantity'
                 ? `<div class="variant-grid"><div><label class="variant-label" for="scent-${p.id}">Quantity</label><select class="product-scent" id="scent-${p.id}">${primaryValues.map(value => `<option value="${value}">${value}</option>`).join('')}</select></div></div>`
                 : `<div class="variant-grid">
@@ -792,13 +884,14 @@ function renderProducts(containerId, filter = 'all', query = activeProductSearch
                </select>` : ''}`
             : '';
 
+        const initialPrice = getInitialProductPrice(p);
         return `
-        <div class="product-card${containerId === 'productDetail' ? ' product-detail-card' : ''}"${containerId === 'productDetail' ? ' id="productDetailCard"' : ''} data-id="${p.id}">
+        <div class="product-card product-card-${p.category || 'other'}${containerId === 'productDetail' ? ' product-detail-card' : ''}"${containerId === 'productDetail' ? ' id="productDetailCard"' : ''} data-id="${p.id}">
             ${media}
             <h3>${detailLinkStart}${p.name}${detailLinkEnd}</h3>
             <p class="desc">${p.desc}</p>
             <div class="variant-area">${variantOptions}</div>
-            <div class="price product-price">${CONFIG.currency}${p.variants?.[0]?.price || p.price} <small>/ ${p.variants?.[0]?.unit || p.unit || 'unit'}</small></div>
+            <div class="price product-price">${CONFIG.currency}${initialPrice.price} <small>/ ${initialPrice.unit}</small></div>
             <button class="btn-add" data-id="${p.id}">
                 <i class="fas fa-plus"></i> Add to Cart
             </button>
@@ -833,18 +926,20 @@ function renderProducts(containerId, filter = 'all', query = activeProductSearch
     container.querySelectorAll('.btn-add').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = parseInt(btn.dataset.id);
-            const card = btn.closest('.product-card');
+            const card = btn.closest('.product-card') || document.getElementById('productDetailCard');
+            if (!card) return;
             const variantIndex = getSelectedVariantIndex(card, CONFIG.products.find(item => item.id === id));
-            const colorSelect = card.querySelector('.product-color');
+            const colorSelect = getProductControlScope(card).querySelector('.product-color');
             addToCart(id, variantIndex, colorSelect ? colorSelect.value : '');
         });
     });
 
     container.querySelectorAll('.product-scent').forEach(select => {
         select.addEventListener('change', () => {
-            const card = select.closest('.product-card');
+            const card = getProductCardForControl(select);
+            if (!card) return;
             const product = CONFIG.products.find(item => item.id === parseInt(card?.dataset?.id || '0'));
-            const sizeSelect = card?.querySelector('.product-size');
+            const sizeSelect = getProductControlScope(card).querySelector('.product-size');
             if (!product || !sizeSelect) {
                 updateVariantCard(card);
                 return;
@@ -864,16 +959,35 @@ function renderProducts(containerId, filter = 'all', query = activeProductSearch
     });
 
     container.querySelectorAll('.product-size, .product-color').forEach(select => {
-        select.addEventListener('change', () => updateVariantCard(select.closest('.product-card')));
+        select.addEventListener('change', () => {
+            const card = getProductCardForControl(select);
+            if (card) updateVariantCard(card);
+        });
     });
 }
 
+function getProductControlScope(card) {
+    return card.id === 'productDetailCard'
+        ? document.getElementById('productDetailControls') || card
+        : card;
+}
+
+function getProductCardForControl(control) {
+    return control.closest('.product-card') || document.getElementById('productDetailCard');
+}
 
 function getSelectedVariantIndex(card, product) {
     if (!product.variants?.length) return 0;
-    const primarySelect = card.querySelector('.product-scent');
+    const controlScope = getProductControlScope(card);
+    const primarySelect = controlScope.querySelector('.product-scent');
     const primary = primarySelect?.value || '';
-    const secondarySelect = card.querySelector('.product-size');
+    if (product.category === 'candles') {
+        const selectedIndex = getSinglePieceVariantIndexes(product).find(index =>
+            getCandleScentName(product.variants[index]) === primary
+        );
+        return selectedIndex ?? getDefaultVariantIndex(product);
+    }
+    const secondarySelect = controlScope.querySelector('.product-size');
     const secondary = secondarySelect?.value || '';
 
     if (primarySelect && secondary) {
@@ -902,17 +1016,22 @@ function updateVariantCard(card) {
     if (!product) return;
     const variant = product.variants?.[getSelectedVariantIndex(card, product)];
     const price = variant?.price || product.price;
-    const unit = variant?.unit || product.unit || 'unit';
-    card.querySelector('.product-price').innerHTML = `${CONFIG.currency}${price} <small>/ ${unit}</small>`;
+    const unit = product.category === 'candles' ? 'piece' : variant?.unit || product.unit || 'unit';
+    const cardPrice = card.querySelector('.product-price');
+    if (cardPrice) cardPrice.innerHTML = `${CONFIG.currency}${price} <small>/ ${unit}</small>`;
     const detailPrice = document.getElementById('productDetailPrice');
     if (card.id === 'productDetailCard' && detailPrice) {
-        detailPrice.textContent = `${CONFIG.currency}${price} / ${unit}`;
+        detailPrice.textContent = `${CONFIG.currency}${price}`;
+        const detailUnit = document.getElementById('productDetailUnit');
+        if (detailUnit) detailUnit.textContent = `/ ${unit}`;
     }
-    const color = card.querySelector('.product-color')?.value || '';
+    const color = getProductControlScope(card).querySelector('.product-color')?.value || '';
     updateColorImage(card, product, color);
     const cartKey = `${product.id}:${variant?.id || 'base'}:${color || 'default'}`;
     const cartItem = state.cart.find(item => item.variantKey === cartKey);
-    const addButton = card.querySelector('.btn-add');
+    const addButton = card.querySelector('.btn-add')
+        || document.querySelector('#productDetailPurchase .btn-add');
+    if (!addButton) return;
     addButton.classList.toggle('in-cart', Boolean(cartItem));
     addButton.innerHTML = cartItem
         ? `<i class="fas fa-plus"></i> Add one more <small>(${cartItem.qty} in basket)</small>`
@@ -1023,16 +1142,17 @@ function renderCategorySliders() {
             const images = p.images || (p.image ? [p.image] : []);
             const detailHref = `product-detail.html?id=${encodeURIComponent(p.id)}`;
             const mediaHtml = images.length
-                ? `<a class="product-detail-link" href="${detailHref}" aria-label="View ${p.name} details"><img class="icon product-image" src="${images[0]}" alt="${p.name}" loading="lazy"></a>`
+                ? `<div class="product-gallery product-gallery-slider"><a class="product-detail-link" href="${detailHref}" aria-label="View ${p.name} details"><img class="icon product-image" src="${images[0]}" alt="${p.name}" loading="lazy"></a></div>`
                 : `<span class="icon">${p.icon}</span>`;
-            const displayPrice = p.variants?.[0]?.price || p.price;
-            const displayUnit  = p.variants?.[0]?.unit  || p.unit || 'unit';
+            const display = getInitialProductPrice(p);
+            const options = p.category === 'candles' ? getCandleOptionsMarkup(p) : '';
             return `
-            <div class="product-card" data-id="${p.id}">
+            <div class="product-card product-card-${p.category || 'other'}" data-id="${p.id}">
                 ${mediaHtml}
                 <h3><a class="product-detail-link" href="${detailHref}">${p.name}</a></h3>
                 <p class="desc">${p.desc}</p>
-                <div class="price product-price">${CONFIG.currency}${displayPrice} <small>/ ${displayUnit}</small></div>
+                ${options ? `<div class="variant-area">${options}</div>` : ''}
+                <div class="price product-price">${CONFIG.currency}${display.price} <small>/ ${display.unit}</small></div>
                 <button class="btn-add" data-id="${p.id}">
                     <i class="fas fa-plus"></i> Add to Cart
                 </button>
@@ -1070,11 +1190,15 @@ function renderCategorySliders() {
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
-            panels.forEach(p => p.classList.remove('active'));
+            panels.forEach(p => {
+                p.classList.remove('active');
+                p.dispatchEvent(new Event('categorypaneldeactivate'));
+            });
             btn.classList.add('active');
             btn.setAttribute('aria-selected', 'true');
             const panel = document.getElementById(`cat-panel-${btn.dataset.cat}`);
             if (panel) panel.classList.add('active');
+            panel?.dispatchEvent(new Event('categorypanelactivate'));
         });
     });
 
@@ -1088,7 +1212,17 @@ function renderCategorySliders() {
         const btn = e.target.closest('.btn-add');
         if (!btn) return;
         const id = parseInt(btn.dataset.id);
-        addToCart(id, 0, '');
+        const card = btn.closest('.product-card');
+        const product = CONFIG.products.find(item => item.id === id);
+        if (!card || !product) return;
+        const variantIndex = getSelectedVariantIndex(card, product);
+        const color = card.querySelector('.product-color')?.value || '';
+        addToCart(id, variantIndex, color);
+    });
+    slidersEl.addEventListener('change', e => {
+        const select = e.target.closest('.product-scent, .product-color');
+        const card = select?.closest('.product-card');
+        if (card) updateVariantCard(card);
     });
 }
 
@@ -1215,9 +1349,10 @@ function initCategorySlider(cat, total) {
     // ── Auto-play ──────────────────────────────────────────────
     const AUTO_MS = 3000;
     let autoTimer = null;
+    let isPaused = false;
 
     function startAutoplay() {
-        if (autoTimer) return;
+        if (autoTimer || isPaused || !panel.classList.contains('active') || document.hidden) return;
         autoTimer = setInterval(() => step(1), AUTO_MS);
     }
     function stopAutoplay() {
@@ -1226,11 +1361,29 @@ function initCategorySlider(cat, total) {
     }
     function resetAutoplay() { stopAutoplay(); startAutoplay(); }
 
-    // ── Pause on hover / touch ─────────────────────────────────
-    panel.addEventListener('mouseenter', stopAutoplay);
-    panel.addEventListener('mouseleave', startAutoplay);
-    panel.addEventListener('touchstart', stopAutoplay, { passive: true });
-    panel.addEventListener('touchend',   startAutoplay, { passive: true });
+    // ── Pause while the user is interacting with the slider ────
+    function pauseAutoplay() {
+        isPaused = true;
+        stopAutoplay();
+    }
+    function resumeAutoplay() {
+        isPaused = false;
+        startAutoplay();
+    }
+    panel.addEventListener('pointerenter', pauseAutoplay);
+    panel.addEventListener('pointerleave', resumeAutoplay);
+    panel.addEventListener('focusin', pauseAutoplay);
+    panel.addEventListener('focusout', event => {
+        if (!panel.contains(event.relatedTarget)) resumeAutoplay();
+    });
+    panel.addEventListener('touchstart', pauseAutoplay, { passive: true });
+    panel.addEventListener('touchend', resumeAutoplay, { passive: true });
+    panel.addEventListener('categorypanelactivate', startAutoplay);
+    panel.addEventListener('categorypaneldeactivate', stopAutoplay);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stopAutoplay();
+        else startAutoplay();
+    });
 
     // ── Swipe ──────────────────────────────────────────────────
     let touchStartX = 0;
@@ -1255,7 +1408,7 @@ function initCategorySlider(cat, total) {
     // ── Init ───────────────────────────────────────────────────
     buildDots();
     moveTo(currentPos, false);
-    startAutoplay();
+    if (panel.classList.contains('active')) startAutoplay();
 
     // ── Resize ─────────────────────────────────────────────────
     let resizeTimer;
@@ -1291,11 +1444,33 @@ function initFilters() {
     if (!filterBtns.length) return;
     
     filterBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === activeProductCategory);
         btn.addEventListener('click', () => {
             filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const filter = btn.dataset.filter;
-            renderProducts('allProducts', filter);
+            activeProductCategory = btn.dataset.filter || 'all';
+            renderProducts('allProducts', activeProductCategory);
+            const description = document.querySelector('.page-header p');
+            if (description) {
+                description.textContent = activeProductSearch
+                    ? `Showing results for "${activeProductSearch}"`
+                    : activeProductCategory !== 'all'
+                        ? `Showing ${formatCategoryName(activeProductCategory)}.`
+                        : 'Handmade pieces for gifting, styling, celebrating and keeping.';
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            if (activeProductCategory !== 'all') {
+                params.set('cat', activeProductCategory);
+            } else {
+                params.delete('cat');
+            }
+            const queryString = params.toString();
+            window.history.replaceState(
+                null,
+                '',
+                `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`
+            );
         });
     });
 }
@@ -1443,20 +1618,27 @@ async function init() {
         renderCategorySliders();
     }
     if (document.getElementById('allProducts')) {
-        renderProducts('allProducts');
+        const requestedCategory = new URLSearchParams(window.location.search).get('cat') || 'all';
+        const availableCategories = new Set(CONFIG.products.map(product => product.category));
+        activeProductCategory = availableCategories.has(requestedCategory) ? requestedCategory : 'all';
+        renderProducts('allProducts', activeProductCategory);
         const description = document.querySelector('.page-header p');
         const defaultDescription = description?.textContent || '';
         if (activeProductSearch) {
             if (description) description.textContent = `Showing results for "${activeProductSearch}"`;
+        } else if (activeProductCategory !== 'all' && description) {
+            description.textContent = `Showing ${formatCategoryName(activeProductCategory)}.`;
         }
         if (searchInput) {
             searchInput.addEventListener('input', () => {
                 activeProductSearch = searchInput.value.trim();
-                renderProducts('allProducts');
+                renderProducts('allProducts', activeProductCategory);
                 if (description) {
                     description.textContent = activeProductSearch
                         ? `Showing results for "${activeProductSearch}"`
-                        : defaultDescription;
+                        : activeProductCategory !== 'all'
+                            ? `Showing ${formatCategoryName(activeProductCategory)}.`
+                            : defaultDescription;
                 }
 
                 const params = new URLSearchParams(window.location.search);
@@ -1488,12 +1670,28 @@ async function init() {
                     <p class="product-detail-eyebrow">${formatCategoryName(product.category)}</p>
                     <h2>${product.name}</h2>
                     <p>${product.desc}</p>
-                    <dl class="product-detail-facts">
-                        <div><dt>Category</dt><dd>${formatCategoryName(product.category)}</dd></div>
-                        <div><dt>Price</dt><dd id="productDetailPrice">${CONFIG.currency}${product.variants?.[0]?.price || product.price} / ${product.variants?.[0]?.unit || product.unit || 'unit'}</dd></div>
-                    </dl>
+                    <div class="product-detail-price"><strong id="productDetailPrice">${CONFIG.currency}${product.variants?.[0]?.price || product.price}</strong><span id="productDetailUnit">/ ${product.variants?.[0]?.unit || product.unit || 'unit'}</span></div>
+                    <div id="productDetailControls"></div>
+                    <div id="productDetailPurchase"></div>
+                    <p class="product-detail-note"><i class="fas fa-hand-sparkles" aria-hidden="true"></i> Thoughtfully handmade in small batches</p>
                     <a class="product-detail-back" href="products.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to collection</a>
                 `;
+                const detailCard = detailContainer.querySelector('#productDetailCard');
+                const detailControls = document.getElementById('productDetailControls');
+                const detailPurchase = document.getElementById('productDetailPurchase');
+                const cardTitle = detailCard?.querySelector('h3');
+                const cardDescription = detailCard?.querySelector('.desc');
+                const cardPrice = detailCard?.querySelector('.product-price');
+                const cardButton = detailCard?.querySelector('.btn-add');
+                cardTitle?.remove();
+                cardDescription?.remove();
+                cardPrice?.remove();
+                if (cardPrice) cardPrice.removeAttribute('id');
+                if (detailControls) {
+                    const variants = detailCard?.querySelector('.variant-area');
+                    if (variants) detailControls.append(variants);
+                }
+                if (detailPurchase && cardButton) detailPurchase.append(cardButton);
             }
             document.title = `${product.name} — S.T. Craft Cottage`;
         } else {

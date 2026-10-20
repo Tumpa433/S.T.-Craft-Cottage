@@ -13,17 +13,41 @@
     "category": "jewellery"
   },
   {
-  "id": 3,
-  "name": "Red Hibiscus Necklace & Earring Set",
-  "icon": "📿",
-  "images": [
-    "assets/images/Jewellery/red-hibiscus.webp"
-  ],
-  "desc": "A vibrant handcrafted red hibiscus necklace and matching floral earrings with green woven cord and wooden beads — perfect for boho styling and lovely for gifting.",
-  "price": 449,
-  "unit": "set",
-  "category": "jewellery"
-},
+    "id": 17,
+    "name": "Red Hibiscus Necklace & Earring Set",
+    "icon": "📿",
+    "images": [
+      "assets/images/Jewellery/red-hibiscus.webp"
+    ],
+    "desc": "A vibrant handcrafted red hibiscus necklace and matching floral earrings with green woven cord and wooden beads — perfect for boho styling and lovely for gifting.",
+    "price": 449,
+    "unit": "set",
+    "category": "jewellery"
+  },
+  {
+    "id": 18,
+    "name": "Black Batik Choker Set",
+    "icon": "📿",
+    "images": [
+      "assets/images/jewellery/Black Batik Choker Set.png"
+    ],
+    "desc": "A handcrafted black batik choker set, made to add a bold artisan touch to everyday and occasion looks.",
+    "price": 149,
+    "unit": "set",
+    "category": "jewellery"
+  },
+  {
+    "id": 19,
+    "name": "Maroon Coin Necklace Set",
+    "icon": "📿",
+    "images": [
+      "assets/images/jewellery/Maroon Coin Necklace Set.png"
+    ],
+    "desc": "A handcrafted maroon coin necklace set, styled for festive outfits and thoughtful gifting.",
+    "price": 149,
+    "unit": "set",
+    "category": "jewellery"
+  },
   {
     "id": 4,
     "name": "Rose Bloom Glass",
@@ -33,7 +57,7 @@
       "assets/images/candles/small-glass-rose1.webp",
       "assets/images/candles/small-glass-rose.webp"
     ],
-    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your glass quantity and available colour.",
+    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented. Sold individually, per piece.",
     "variants": [
       { "id": "mogra-1", "name": "Mogra · 1 glass", "price": 149, "unit": "piece" },
       { "id": "mogra-2", "name": "Mogra · 2 glasses", "price": 279, "unit": "pack" },
@@ -63,7 +87,7 @@
       "White & Blue": "assets/images/candles/aura_waves_white-blue.webp",
       "White, Pink & Yellow": "assets/images/candles/aura_waves_white-pink-yellow.webp"
     },
-    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your candle quantity and available colour.",
+    "desc": "Choose your scent and available colour. Each candle is sold individually.",
     "variants": [
       { "id": "mogra-1", "name": "Mogra · 1 candle", "price": 249, "unit": "piece" },
       { "id": "mogra-3", "name": "Mogra · 3 candles", "price": 699, "unit": "pack" },
@@ -93,7 +117,7 @@
       "Ocean Blue": "assets/images/candles/Coastal Shells2.webp",
       "Buttery Yellow": "assets/images/candles/Coastal Shells1.webp"
     },
-    "desc": "Choose Mogra, Jasmine, Sandalwood, or unscented, then select your available colour.",
+    "desc": "Choose your scent and available colour. Sold individually, per piece.",
     "variants": [
       { "id": "mogra", "name": "Mogra", "price": 599, "unit": "piece" },
       { "id": "jasmine", "name": "Jasmine", "price": 599, "unit": "piece" },
@@ -113,7 +137,7 @@
       "assets/images/candles/Mrittika Stem Glass1.webp",
       "assets/images/candles/Mrittika_packet.webp"
     ],
-    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your stem glass quantity.",
+    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented. Sold individually, per piece.",
     "variants": [
       { "id": "mogra-1", "name": "Mogra · 1 stem glass", "price": 299, "unit": "piece" },
       { "id": "mogra-2", "name": "Mogra · 2 stem glasses", "price": 499, "unit": "pack" },
@@ -141,7 +165,7 @@
       "assets/images/candles/Mrittika_packet.webp",
       "assets/images/candles/Mrittika Mini Cup1.webp"
     ],
-    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented, then select your mini cup quantity.",
+    "desc": "Choose Mogra, Jasmine, Sandalwood or unscented. Sold individually, per piece.",
     "variants": [
       { "id": "mogra-1", "name": "Mogra · 1 mini cup", "price": 229, "unit": "piece" },
       { "id": "mogra-2", "name": "Mogra · 2 mini cups", "price": 399, "unit": "pack" },
@@ -247,6 +271,10 @@
       "assets/images/candles/Royal Blue Edition1.webp"
     ],
     "desc": "Handcrafted Aqua Flora candle in the Royal Blue edition.",
+    "variants": [
+      { "id": "scented", "name": "Scented", "price": 79, "unit": "piece" },
+      { "id": "unscented", "name": "Unscented", "price": 79, "unit": "piece" }
+    ],
     "price": 79,
     "unit": "piece",
     "category": "candles"
@@ -260,6 +288,10 @@
       "assets/images/candles/Deep Wine Edition1.webp"
     ],
     "desc": "Handcrafted Aqua Flora candle in the deep wine and dark plum edition.",
+    "variants": [
+      { "id": "scented", "name": "Scented", "price": 79, "unit": "piece" },
+      { "id": "unscented", "name": "Unscented", "price": 79, "unit": "piece" }
+    ],
     "price": 79,
     "unit": "piece",
     "category": "candles"
@@ -273,6 +305,10 @@
       "assets/images/candles/Dusty Rose1.webp"
     ],
     "desc": "Handcrafted Aqua Flora candle in the dusty mauve and plum rose edition.",
+    "variants": [
+      { "id": "scented", "name": "Scented", "price": 79, "unit": "piece" },
+      { "id": "unscented", "name": "Unscented", "price": 79, "unit": "piece" }
+    ],
     "price": 79,
     "unit": "piece",
     "category": "candles"
@@ -287,6 +323,10 @@
       "assets/images/candles/Lilac Edition2.webp"
     ],
     "desc": "Handcrafted Aqua Flora candle in the soft lilac and lavender edition.",
+    "variants": [
+      { "id": "scented", "name": "Scented", "price": 79, "unit": "piece" },
+      { "id": "unscented", "name": "Unscented", "price": 79, "unit": "piece" }
+    ],
     "price": 79,
     "unit": "piece",
     "category": "candles"
@@ -300,6 +340,10 @@
       "assets/images/candles/Golden Yellow Edition1.webp"
     ],
     "desc": "Handcrafted Aqua Flora candle in the bright golden yellow edition.",
+    "variants": [
+      { "id": "scented", "name": "Scented", "price": 79, "unit": "piece" },
+      { "id": "unscented", "name": "Unscented", "price": 79, "unit": "piece" }
+    ],
     "price": 79,
     "unit": "piece",
     "category": "candles"
