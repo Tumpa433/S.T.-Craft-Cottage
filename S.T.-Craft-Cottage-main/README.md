@@ -24,7 +24,7 @@ The editor works entirely in the browser. It does not upload or save changes on 
 3. Run `npm run dev` and open the URL printed by Vite.
 4. Run `npm run build` to create the static site in `dist`; run `npm run preview` to preview that build.
 
-The build includes `index.html`, `products.html`, `cart.html`, `contact.html`, `admin.html`, `assets`, `_headers` and `robots.txt`.
+The build includes the storefront pages (`index.html`, `products.html`, `cart.html`, `contact.html`), policy pages (`privacy.html`, `terms.html`, `delivery-returns.html`), `admin.html`, `assets`, `_headers` and `robots.txt`.
 
 ## Cloudflare Pages free hosting
 
@@ -37,6 +37,6 @@ Free plans are governed by provider limits and terms; they are not guaranteed to
 - The browser basket is saved on the customer's own device with the local-storage key `stCraftCottageCart`.
 - WhatsApp opens a prepared message; it is not sent until the customer taps **Send**.
 - Basket totals are estimates. Confirm prices, stock and delivery with the customer before payment.
-- Review all product details, current contact information, delivery promises, returns terms, and other store policies before launch.
+- The site includes operational privacy, shopping, delivery and returns notices. Confirm seller details, tax status, product disclosures, fulfilment practices and current legal requirements with a qualified Indian professional before treating them as final.
 
 Keep a backup of `products.json` and `public/assets/images/` before making catalog changes.

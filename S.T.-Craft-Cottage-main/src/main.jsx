@@ -129,9 +129,56 @@ function useHeroParallax() {
   return ref;
 }
 
+function getRouteFromPath(pathname) {
+  const page = pathname.split('/').pop();
+  return ({
+    'products.html': 'products',
+    'cart.html': 'cart',
+    'contact.html': 'contact',
+    'privacy.html': 'privacy',
+    'terms.html': 'terms',
+    'delivery-returns.html': 'delivery'
+  })[page] || 'home';
+}
+
+function animateProductToCart(sourceElement) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const sourceImage = sourceElement.closest('.product-card')?.querySelector('.product-image');
+  const targetSelector = window.innerWidth <= 900
+    ? '.mobile-cart-shortcut .nav-cart-icon'
+    : '.nav-links .nav-cart-link .nav-cart-icon';
+  const target = document.querySelector(targetSelector);
+  if (!sourceImage?.currentSrc || !target) return;
+
+  const sourceBounds = sourceImage.getBoundingClientRect();
+  const targetBounds = target.getBoundingClientRect();
+  if (!sourceBounds.width || !sourceBounds.height || !targetBounds.width || !targetBounds.height) return;
+
+  const flight = document.createElement('img');
+  flight.src = sourceImage.currentSrc;
+  flight.alt = '';
+  flight.setAttribute('aria-hidden', 'true');
+  flight.className = 'cart-flight-image';
+  flight.style.left = `${sourceBounds.left}px`;
+  flight.style.top = `${sourceBounds.top}px`;
+  flight.style.width = `${sourceBounds.width}px`;
+  flight.style.height = `${sourceBounds.height}px`;
+  document.body.append(flight);
+
+  const scale = Math.min(targetBounds.width / sourceBounds.width, targetBounds.height / sourceBounds.height, 0.45);
+  const deltaX = targetBounds.left + targetBounds.width / 2 - sourceBounds.left - sourceBounds.width * scale / 2;
+  const deltaY = targetBounds.top + targetBounds.height / 2 - sourceBounds.top - sourceBounds.height * scale / 2;
+  const animation = flight.animate([
+    { transform: 'translate(0, 0) scale(1)', opacity: 1, borderRadius: '12px' },
+    { transform: `translate(${deltaX}px, ${deltaY}px) scale(${scale})`, opacity: 0.35, borderRadius: '50%' }
+  ], { duration: 680, easing: 'cubic-bezier(0.22, 0.75, 0.2, 1)', fill: 'forwards' });
+  animation.onfinish = () => flight.remove();
+}
+
 function App() {
-  const page = window.location.pathname.split('/').pop();
-  const route = page === 'products.html' ? 'products' : page === 'cart.html' ? 'cart' : page === 'contact.html' ? 'contact' : 'home';
+  const [route, setRoute] = useState(() => getRouteFromPath(window.location.pathname));
+  const [locationVersion, setLocationVersion] = useState(0);
   const [cart, setCart] = useState(readCart);
   const [activeFilter, setActiveFilter] = useState('all');
   const [toasts, setToasts] = useState([]);
@@ -151,7 +198,10 @@ function App() {
       home: 'Thoughtful Creations for Every Special Moment — S.T. Craft Cottage',
       products: 'Shop Puja & Festival Finds — S.T. Craft Cottage',
       cart: 'Your Basket — S.T. Craft Cottage',
-      contact: 'Contact — S.T. Craft Cottage'
+      contact: 'Contact — S.T. Craft Cottage',
+      privacy: 'Privacy Notice — S.T. Craft Cottage',
+      terms: 'Shopping Terms — S.T. Craft Cottage',
+      delivery: 'Delivery & Returns — S.T. Craft Cottage'
     };
     document.title = titles[route];
 
@@ -165,15 +215,60 @@ function App() {
     };
   }, [route]);
 
+  useEffect(() => {
+    const handlePopState = () => {
+      setRoute(getRouteFromPath(window.location.pathname));
+      setLocationVersion(version => version + 1);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      if (!window.location.hash) {
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      const targetId = decodeURIComponent(window.location.hash.slice(1));
+      document.getElementById(targetId)?.scrollIntoView();
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [route, locationVersion]);
+
+  function navigateHeaderLink(event) {
+    if (
+      event.defaultPrevented
+      || event.button !== 0
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+      || event.currentTarget.target === '_blank'
+    ) return;
+
+    const destination = new URL(event.currentTarget.href, window.location.href);
+    if (destination.origin !== window.location.origin) return;
+
+    event.preventDefault();
+    window.history.pushState({}, '', destination);
+    setRoute(getRouteFromPath(destination.pathname));
+    setLocationVersion(version => version + 1);
+  }
+
   function showToast(message, type = 'info', duration = 4000) {
     const id = `${Date.now()}-${Math.random()}`;
     setToasts(current => [...current, { id, message, type }]);
     window.setTimeout(() => setToasts(current => current.filter(toast => toast.id !== id)), duration);
   }
 
-  function addToCart(product, variant, selectedColor) {
+  function addToCart(product, variant, selectedColor, sourceElement) {
     const color = selectedColor || '';
     const cartKey = `${product.id}:${variant?.id || 'base'}:${color || 'default'}`;
+    if (sourceElement) animateProductToCart(sourceElement);
     setCart(current => {
       const existing = current.find(item => item.variantKey === cartKey);
       if (existing) {
@@ -193,8 +288,15 @@ function App() {
   }
 
   function removeFromCart(cartKey) {
-    setCart(current => current.filter(item => (item.variantKey || `${item.id}:base:default`) !== cartKey));
+    const updatedCart = cart.filter(item => (item.variantKey || `${item.id}:base:default`) !== cartKey);
+    setCart(updatedCart);
     showToast('🗑️ Item removed from cart', 'info', 2000);
+  }
+
+  function adjustCartItem(cartKey, amount) {
+    setCart(current => current
+      .map(item => (item.variantKey || `${item.id}:base:default`) === cartKey ? { ...item, qty: item.qty + amount } : item)
+      .filter(item => item.qty > 0));
   }
 
   function clearCart() {
@@ -214,20 +316,28 @@ function App() {
       return;
     }
 
-    const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-    let message = `🧵 *${SHOP_NAME}* — New Order\n\n`;
-    message += `👤 *Customer Details:*\nName: ${details.name}\nPhone: ${details.phone}\nAddress: ${details.address}\n`;
-    if (details.notes) message += `Notes: ${details.notes}\n`;
-    message += '\n📋 *Items:*\n';
-    cart.forEach(item => {
+    const formatPrice = amount => new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 2
+    }).format(amount);
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    let message = `${SHOP_NAME}\nORDER REQUEST (NOT YET CONFIRMED)\n\n`;
+    message += `CUSTOMER DETAILS\nName: ${details.name.trim()}\nPhone: ${details.phone.trim()}\nAddress: ${details.address.trim()}\n`;
+    if (details.notes.trim()) message += `Notes: ${details.notes.trim()}\n`;
+    message += '\nORDER ITEMS\n';
+    cart.forEach((item, index) => {
       const variantText = item.variantKey && item.name !== item.productName
-        ? ` (${item.name}${item.selectedColor ? `, ${item.selectedColor}` : ''})`
+        ? ` - ${item.name}${item.selectedColor && !item.name.includes(item.selectedColor) ? `, ${item.selectedColor}` : ''}`
         : '';
-      message += `  • ${item.icon} ${item.productName || item.name}${variantText} × ${item.qty} = ${CURRENCY}${item.price * item.qty}\n`;
+      const itemName = `${item.productName || item.name}${variantText}`;
+      const unitPrice = formatPrice(item.price);
+      const lineTotal = formatPrice(item.price * item.qty);
+      message += `${index + 1}. ${itemName}\n   ${item.qty} x ${unitPrice} = ${lineTotal}\n`;
     });
-    message += `\n💰 *Subtotal:* ${CURRENCY}${total}\n`;
-    message += '🚚 *Delivery:* Please confirm eligibility and any delivery fee for my address.\n';
-    message += `🧾 *Estimated total:* ${CURRENCY}${total}\n\n🤎 Please confirm availability, delivery and the final total before payment.`;
+    message += `\nITEMS SUBTOTAL: ${formatPrice(subtotal)}\n`;
+    message += 'Delivery fee: Not included; please confirm delivery availability and the fee for this address.\n';
+    message += '\nPlease confirm item availability, delivery fee, and the final amount before payment. This message is an order request, not a confirmed order.';
     return createWhatsAppDraft(message);
   }
 
@@ -250,7 +360,7 @@ function App() {
 
   return (
     <>
-      <Header route={route} categories={categories} />
+      <Header route={route} categories={categories} cartCount={cartCount} onNavigate={navigateHeaderLink} />
       {route === 'home' && <HomePage products={products} cart={cart} addToCart={addToCart} />}
       {route === 'products' && (
         <ProductsPage
@@ -262,8 +372,9 @@ function App() {
           setActiveFilter={setActiveFilter}
         />
       )}
-      {route === 'cart' && <CartPage cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} placeOrder={placeOrder} />}
+      {route === 'cart' && <CartPage cart={cart} removeFromCart={removeFromCart} adjustCartItem={adjustCartItem} clearCart={clearCart} placeOrder={placeOrder} />}
       {route === 'contact' && <ContactPage sendContactMessage={sendContactMessage} />}
+      {['privacy', 'terms', 'delivery'].includes(route) && <StorePolicyPage type={route} />}
       <Footer />
       <div className="toast-container" aria-live="polite" aria-atomic="false">
         {toasts.map(toast => (
@@ -277,8 +388,14 @@ function App() {
   );
 }
 
-function Header({ route, categories }) {
+function Header({ route, categories, cartCount, onNavigate }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const aboutActive = route === 'home' && window.location.hash === '#our-promise';
+  const handleNavigation = event => {
+    setMenuOpen(false);
+    event.currentTarget.closest('.nav-category-menu')?.removeAttribute('open');
+    onNavigate(event);
+  };
   const links = [
     ['home', 'index.html', 'Home'],
     ['products', 'products.html', 'Products']
@@ -287,12 +404,22 @@ function Header({ route, categories }) {
   return (
     <header className="header">
       <div className="container">
-        <a href="index.html" className="logo" aria-label="S.T. Craft Cottage home">
+        <a href="index.html" className="logo" aria-label="S.T. Craft Cottage home" onClick={handleNavigation}>
           <img src="assets/images/brand-logo.png" alt="S.T. Craft Cottage" />
+          <span className="logo-lockup">
+            <span className="logo-name">S.T. Craft Cottage</span>
+            <span className="logo-tagline">Handmade with love</span>
+          </span>
         </a>
         <nav className={`nav-links${menuOpen ? ' open' : ''}`} aria-label="Main navigation">
           {links.map(([key, href, label]) => (
-            <a href={href} className={route === key ? 'active' : ''} key={key} onClick={() => setMenuOpen(false)}>
+            <a
+              href={href}
+              className={route === key && !(key === 'home' && aboutActive) ? 'active' : ''}
+              aria-current={route === key && !(key === 'home' && aboutActive) ? 'page' : undefined}
+              key={key}
+              onClick={handleNavigation}
+            >
               {label}
             </a>
           ))}
@@ -300,14 +427,34 @@ function Header({ route, categories }) {
             <summary>Shop by Category <i className="fas fa-chevron-down" aria-hidden="true" /></summary>
             <div className="nav-category-dropdown">
               {categories.map(category => (
-                <a key={category} href={`products.html#collection-${category}`} onClick={() => setMenuOpen(false)}>{formatCategory(category)}</a>
+                <a key={category} href={`products.html#collection-${category}`} onClick={handleNavigation}>{formatCategory(category)}</a>
               ))}
             </div>
           </details>
-          <a href="index.html#our-promise" onClick={() => setMenuOpen(false)}>About</a>
-          <a href="contact.html" className={route === 'contact' ? 'active' : ''} onClick={() => setMenuOpen(false)}>Contact</a>
-          <a href="products.html" className="nav-cta" onClick={() => setMenuOpen(false)}><i className="fas fa-shopping-bag" aria-hidden="true" /> Order Now</a>
+          <a href="index.html#our-promise" className={aboutActive ? 'active' : ''} aria-current={aboutActive ? 'location' : undefined} onClick={handleNavigation}>About</a>
+          <a href="contact.html" className={route === 'contact' ? 'active' : ''} aria-current={route === 'contact' ? 'page' : undefined} onClick={handleNavigation}>Contact</a>
+          <a
+            href="cart.html"
+            className={`nav-cart-link${route === 'cart' ? ' active' : ''}`}
+            aria-label={`Basket${cartCount ? `, ${cartCount} ${cartCount === 1 ? 'item' : 'items'}` : ', empty'}`}
+            aria-current={route === 'cart' ? 'page' : undefined}
+            onClick={handleNavigation}
+          >
+            <span className="nav-cart-icon" aria-hidden="true"><i className="fas fa-cart-shopping" /></span>
+            <span>Basket</span>
+            {cartCount > 0 && <span className="nav-cart-count" key={cartCount} aria-hidden="true">{cartCount > 99 ? '99+' : cartCount}</span>}
+          </a>
+          <a href="products.html#catalog-sections" className="nav-cta" onClick={handleNavigation}><i className="fas fa-shopping-bag" aria-hidden="true" /> Order Now</a>
         </nav>
+        <a
+          href="cart.html"
+          className="mobile-cart-shortcut"
+          aria-label={`Open basket${cartCount ? `, ${cartCount} ${cartCount === 1 ? 'item' : 'items'}` : ', empty'}`}
+          onClick={handleNavigation}
+        >
+          <span className="nav-cart-icon" aria-hidden="true"><i className="fas fa-cart-shopping" /></span>
+          {cartCount > 0 && <span className="nav-cart-count" key={cartCount} aria-hidden="true">{cartCount > 99 ? '99+' : cartCount}</span>}
+        </a>
         <button
           className={`hamburger${menuOpen ? ' active' : ''}`}
           type="button"
@@ -419,7 +566,7 @@ function ProductCard({ product, cart, addToCart, index = 0 }) {
         )}
       </div>
       <div className="price product-price">{CURRENCY}{price} <small>/ {unit}</small></div>
-      <button className={`btn-add${cartItem ? ' in-cart' : ''}`} type="button" onClick={() => addToCart(product, selectedVariant, color)}>
+      <button className={`btn-add${cartItem ? ' in-cart' : ''}`} type="button" onClick={event => addToCart(product, selectedVariant, color, event.currentTarget)}>
         <i className="fas fa-plus" /> {cartItem ? <>Add one more <small>({cartItem.qty} in basket)</small></> : 'Add to Cart'}
       </button>
     </article>
@@ -601,7 +748,7 @@ function ProductsPage({ products, cart, addToCart, categories, activeFilter, set
               </button>
             ))}
           </div>
-          <div className="catalog-sections">
+          <div id="catalog-sections" className="catalog-sections">
             {visibleCategories.map(category => {
               const categoryProducts = matchingProducts.filter(product => product.category === category);
               return categoryProducts.length > 0 && (
@@ -623,73 +770,133 @@ function ProductsPage({ products, cart, addToCart, categories, activeFilter, set
   );
 }
 
-function CartPage({ cart, removeFromCart, clearCart, placeOrder }) {
+function CartPage({ cart, removeFromCart, adjustCartItem, clearCart, placeOrder }) {
   const [details, setDetails] = useState({ name: '', phone: '', address: '', notes: '' });
   const [whatsAppDraft, setWhatsAppDraft] = useState('');
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
   const updateDetails = event => setDetails(current => ({ ...current, [event.target.name]: event.target.value }));
   return (
-    <main>
-      <PageHeader icon="fa-shopping-basket" title="Your basket">Review your handmade finds before placing your order.</PageHeader>
+    <main className="cart-page">
+      <section className="cart-hero">
+        <div className="container cart-hero-inner">
+          <span className="cart-hero-sprig cart-hero-sprig-left" aria-hidden="true">❧</span>
+          <span className="cart-hero-note">Crafted with love <b>♡</b></span>
+          <span className="cart-hero-hearts" aria-hidden="true">♡　♡</span>
+          <div className="cart-hero-title">
+            <i className="fas fa-bag-shopping" aria-hidden="true" />
+            <h1>Your Basket</h1>
+          </div>
+          <p>Review your handmade finds before placing your order.</p>
+          <span className="cart-hero-sprig cart-hero-sprig-right" aria-hidden="true">❧</span>
+        </div>
+      </section>
       <section className="cart-section">
         <div className="container">
-          <div className="cart-container">
-            <div className="cart-left">
-              <h2 className="cart-review-title"><i className="fas fa-list-check" /> Order review</h2>
-              <div className="cart-items">
-                {!cart.length ? (
-                  <div className="cart-empty">
-                    <i className="fas fa-basket-shopping" />
-                    <p>Your basket is waiting for something handmade.</p>
-                    <a href="products.html" className="btn-primary"><i className="fas fa-store" /> Browse the collection</a>
+          <form className="cart-layout-form" onSubmit={event => { event.preventDefault(); setWhatsAppDraft(placeOrder(details) || ''); }}>
+            <div className="cart-container">
+              <section className="cart-review-card" aria-labelledby="cart-review-heading">
+                <header className="cart-card-heading">
+                  <span className="cart-heading-icon"><i className="fas fa-basket-shopping" aria-hidden="true" /></span>
+                  <div>
+                    <h2 id="cart-review-heading">Order Review</h2>
+                    <p>{itemCount} {itemCount === 1 ? 'item' : 'items'} in your basket</p>
                   </div>
-                ) : cart.map(item => (
-                  <div className="cart-item" key={item.variantKey || `${item.id}:${item.name}`}>
-                    <div className="item-info">
-                      <span style={{ fontSize: '1.4rem' }}>{item.icon}</span>
-                      <span className="qty">{item.qty}</span>
-                      <span className="name">
-                        {item.productName || item.name}
-                        {item.variantKey && item.name !== item.productName && <small>{item.name}{item.selectedColor ? ` · ${item.selectedColor}` : ''}</small>}
-                      </span>
+                  {cart.length > 0 && (
+                    <button className="cart-clear-button" type="button" onClick={clearCart}>
+                      <i className="fas fa-trash-can" aria-hidden="true" /> Clear Basket
+                    </button>
+                  )}
+                </header>
+                <div className="cart-items">
+                  {!cart.length ? (
+                    <div className="cart-empty">
+                      <i className="fas fa-basket-shopping" aria-hidden="true" />
+                      <p>Your basket is waiting for something handmade.</p>
+                      <a href="products.html" className="btn-primary"><i className="fas fa-store" aria-hidden="true" /> Browse the collection</a>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span className="item-price">{CURRENCY}{item.price * item.qty}</span>
-                      <button className="btn-remove" type="button" onClick={() => removeFromCart(item.variantKey || `${item.id}:base:default`)} title="Remove item" aria-label={`Remove ${item.productName || item.name}`}>
-                        <i className="fas fa-trash-can" />
-                      </button>
+                  ) : cart.map(item => {
+                    const cartKey = item.variantKey || `${item.id}:base:default`;
+                    const image = item.images?.[0] || item.image;
+                    return (
+                      <article className="cart-item" key={cartKey}>
+                        <div className="cart-item-product">
+                          {image
+                            ? <img className="cart-item-image" src={image} alt={item.productName || item.name} />
+                            : <span className="cart-item-image cart-item-image-fallback" aria-hidden="true">{item.icon || <i className="fas fa-gift" />}</span>}
+                          <div className="cart-item-copy">
+                            <h3>{item.productName || item.name}</h3>
+                            {item.variantKey && item.name !== item.productName && <p>{item.name}{item.selectedColor ? ` · ${item.selectedColor}` : ''}</p>}
+                            <strong className="cart-item-unit-price">{CURRENCY}{item.price} <small>/ {item.unit || 'unit'}</small></strong>
+                          </div>
+                        </div>
+                        <div className="cart-item-controls">
+                          <div className="cart-quantity-control" aria-label={`Quantity of ${item.productName || item.name}`}>
+                            <button type="button" aria-label={`Remove one ${item.productName || item.name}`} onClick={() => adjustCartItem(cartKey, -1)}><i className="fas fa-minus" aria-hidden="true" /></button>
+                            <span aria-live="polite">{item.qty}</span>
+                            <button type="button" aria-label={`Add one ${item.productName || item.name}`} onClick={() => adjustCartItem(cartKey, 1)}><i className="fas fa-plus" aria-hidden="true" /></button>
+                          </div>
+                          <strong className="cart-item-line-price">{CURRENCY}{item.price * item.qty}</strong>
+                          <button className="btn-remove" type="button" onClick={() => removeFromCart(cartKey)} title="Remove item" aria-label={`Remove ${item.productName || item.name}`}>
+                            <i className="fas fa-trash-can" aria-hidden="true" />
+                          </button>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+
+              {cart.length > 0 && (
+                <section className="cart-delivery-card" aria-labelledby="delivery-heading">
+                  <header className="cart-delivery-heading">
+                    <span className="cart-delivery-icon"><i className="fas fa-truck-fast" aria-hidden="true" /></span>
+                    <div><h2 id="delivery-heading">Delivery details</h2><p>Tell us where to deliver</p></div>
+                    <span className="cart-delivery-sprig" aria-hidden="true">❧</span>
+                  </header>
+                  <div className="cart-delivery-fields">
+                    <div className="form-group cart-form-group">
+                      <label htmlFor="orderName"><i className="fas fa-user" aria-hidden="true" /><span>Full Name <b>*</b></span></label>
+                      <input id="orderName" name="name" autoComplete="name" maxLength="120" value={details.name} onChange={updateDetails} placeholder="Your Name" required />
                     </div>
+                    <div className="form-group cart-form-group">
+                      <label htmlFor="orderPhone"><i className="fas fa-phone" aria-hidden="true" /><span>Phone Number <b>*</b></span></label>
+                      <input id="orderPhone" name="phone" type="tel" autoComplete="tel" pattern="[0-9 +()-]{7,20}" title="Enter a phone number with 7 to 20 digits, spaces, or +()- characters." value={details.phone} onChange={updateDetails} placeholder="WhatsApp Number" required />
+                    </div>
+                    <div className="form-group cart-form-group">
+                      <label htmlFor="orderAddress"><i className="fas fa-house" aria-hidden="true" /><span>Full Delivery Address <b>*</b></span></label>
+                      <textarea id="orderAddress" name="address" autoComplete="street-address" maxLength="500" rows="2" value={details.address} onChange={updateDetails} placeholder="House No, Street, Landmark" required />
+                    </div>
+                    <div className="form-group cart-form-group cart-notes-group">
+                      <label htmlFor="orderNotes"><i className="fas fa-pen" aria-hidden="true" /><span>Special Instructions <small>(Optional)</small></span></label>
+                      <input id="orderNotes" name="notes" value={details.notes} onChange={updateDetails} placeholder="Any gifting or delivery notes?" />
+                    </div>
+                    <label className="policy-consent">
+                      <input type="checkbox" required />
+                      <span>I have read the <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Notice</a>. My details will only be shared with the shop if I review and send the WhatsApp message.</span>
+                    </label>
                   </div>
-                ))}
-              </div>
+                </section>
+              )}
             </div>
             {cart.length > 0 && (
-              <div className="cart-right">
-                <form className="checkout-form" onSubmit={event => { event.preventDefault(); setWhatsAppDraft(placeOrder(details) || ''); }}>
-                  <h3><i className="fas fa-truck-fast" /> Delivery details</h3>
-                  <div className="form-group"><label htmlFor="orderName">Full Name *</label><input id="orderName" name="name" autoComplete="name" maxLength="120" value={details.name} onChange={updateDetails} placeholder="Your Name" required /></div>
-                  <div className="form-group"><label htmlFor="orderPhone">Phone Number *</label><input id="orderPhone" name="phone" type="tel" autoComplete="tel" pattern="[0-9 +()-]{7,20}" title="Enter a phone number with 7 to 20 digits, spaces, or +()- characters." value={details.phone} onChange={updateDetails} placeholder="WhatsApp Number" required /></div>
-                  <div className="form-group"><label htmlFor="orderAddress">Full Delivery Address *</label><textarea id="orderAddress" name="address" autoComplete="street-address" maxLength="500" rows="3" value={details.address} onChange={updateDetails} placeholder="House No, Street, Landmark" required /></div>
-                  <div className="form-group"><label htmlFor="orderNotes">Special Instructions (Optional)</label><input id="orderNotes" name="notes" value={details.notes} onChange={updateDetails} placeholder="e.g. Leave at door" /></div>
-                  <div className="cart-summary">
-                    <div className="summary-row"><span>Estimated subtotal</span><span>{CURRENCY}{total}</span></div>
-                    <div className="summary-row"><span>Delivery</span><span>Confirm in WhatsApp</span></div>
-                    <div className="summary-row total"><span>Estimated total</span><span>{CURRENCY}{total}</span></div>
-                    <div className="cart-actions">
-                      <p className="delivery-note">* Delivery eligibility, product availability and the final price are confirmed by the shop in WhatsApp. No online payment is collected here.</p>
-                      <button className="btn-secondary" type="button" onClick={clearCart} style={{ width: '100%', justifyContent: 'center', marginBottom: '10px' }}>
-                        <i className="fas fa-trash" /> Clear Cart
-                      </button>
-                      <button className="btn-whatsapp" type="submit" style={{ width: '100%', justifyContent: 'center' }}>
-                        <i className="fab fa-whatsapp" /> Order via WhatsApp
-                      </button>
-                      {whatsAppDraft && <p className="whatsapp-draft-link" role="status">Not sent yet. <a href={whatsAppDraft} target="_blank" rel="noopener noreferrer">Open the order draft in WhatsApp</a>, review it and tap Send.</p>}
-                    </div>
-                  </div>
-                </form>
-              </div>
+              <>
+                <div className="cart-bottom-row">
+                  <aside className="cart-gift-note">
+                    <i className="fas fa-gift" aria-hidden="true" />
+                    <div><h2>Handmade Happiness Awaits!</h2><p>Complete your order and bring home something special. <span aria-hidden="true">♡</span></p></div>
+                    <span className="cart-gift-sprig" aria-hidden="true">❧</span>
+                  </aside>
+                  <section className="cart-total-card" aria-label="Order total">
+                    <div className="cart-total-amount"><span>Items subtotal</span><strong>{CURRENCY}{total}</strong></div>
+                    <button className="cart-proceed-button" type="submit"><i className="fas fa-lock" aria-hidden="true" /> Review order in WhatsApp <i className="fas fa-arrow-right" aria-hidden="true" /></button>
+                  </section>
+                </div>
+                <p className="delivery-note">This subtotal covers items only; delivery fees are not included. The shop will confirm availability, delivery charges and the final order total in WhatsApp. No payment is taken on this page.</p>
+                {whatsAppDraft && <p className="whatsapp-draft-link" role="status">Your order draft is ready but not sent. <a href={whatsAppDraft} target="_blank" rel="noopener noreferrer">Open it in WhatsApp</a>, review it and tap Send.</p>}
+              </>
             )}
-          </div>
+          </form>
         </div>
       </section>
     </main>
@@ -717,6 +924,10 @@ function ContactPage({ sendContactMessage }) {
                 <div className="form-group"><label htmlFor="contactEmail">Email Address</label><input id="contactEmail" type="email" autoComplete="email" maxLength="254" value={details.email} onChange={event => setDetails({ ...details, email: event.target.value })} placeholder="your@email.com" required /></div>
                 <div className="form-group"><label htmlFor="contactPhone">Phone Number</label><input id="contactPhone" type="tel" autoComplete="tel" pattern="[0-9 +()-]{7,20}" title="Enter a phone number with 7 to 20 digits, spaces, or +()- characters." value={details.phone} onChange={event => setDetails({ ...details, phone: event.target.value })} placeholder="+91 96747 24587" required /></div>
                 <div className="form-group"><label htmlFor="contactMessage">Message</label><textarea id="contactMessage" rows="5" maxLength="1000" value={details.message} onChange={event => setDetails({ ...details, message: event.target.value })} placeholder="Your message..." required /></div>
+                <label className="policy-consent">
+                  <input type="checkbox" required />
+                  <span>I have read the <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Notice</a>. My details will only be shared if I review and send the WhatsApp message.</span>
+                </label>
                 <button type="submit" className="btn-primary"><i className="fab fa-whatsapp" /> Continue in WhatsApp to send</button>
                 {whatsAppDraft && <p className="whatsapp-draft-link" role="status">Your message is still a draft. <a href={whatsAppDraft} target="_blank" rel="noopener noreferrer">Open it in WhatsApp</a> and tap Send.</p>}
               </form>
@@ -740,16 +951,122 @@ function InfoItem({ icon, title, children }) {
   return <div className="info-item"><i className={`fas ${icon}`} /><div><h4>{title}</h4><p>{children}</p></div></div>;
 }
 
+function StorePolicyPage({ type }) {
+  const pages = {
+    privacy: {
+      icon: 'fa-shield-halved',
+      title: 'Privacy Notice',
+      intro: 'How this storefront handles information when you browse, contact us, or prepare an order.',
+      sections: [
+        ['Who operates this shop', <p>S.T. Craft Cottage is operated by Shamanto Roy and Tumpa Biswas as individuals. It is currently not a registered company and no GSTIN is currently provided on this website. Public contact: <a href="mailto:hello@stcraftcottage.com">hello@stcraftcottage.com</a> or <a href="tel:+917003219312">+91 70032 19312</a>. Address: 1/42A, Vivekananda Park, Pirpukur, Kolkata 700070.</p>],
+        ['Information and why it is used', <p>If you prepare an order, the form asks for your name, phone number, delivery address and optional notes so the shop can respond to your request. The contact form asks for your name, email, phone number and message so we can reply. The basket is stored in your browser’s local storage on your device; it is not an order submission to the shop.</p>],
+        ['WhatsApp and your choice to send', <p>Submitting either form opens a pre-filled WhatsApp message. It is a draft: the shop does not receive the form contents unless you choose to review and send it in WhatsApp. If you send it, WhatsApp processes the message under its own terms and privacy policy, and the shop can access it in the shop’s WhatsApp account. Do not include information you do not want to share.</p>],
+        ['Retention and deletion', <p>This static website has no shop-side order database or customer account. Sent messages may remain in WhatsApp chats and backups according to the service, account and device settings. We cannot promise a fixed deletion date or delete data held by WhatsApp. You may ask the shop to delete information it controls; legal, safety or transaction records may need to be retained where required by law.</p>],
+        ['Website hosting and external resources', <p>The website is hosted as a static site. The page loads fonts from Google Fonts and icons from Cloudflare’s CDN; your browser connects to those providers to retrieve the resources, and they may receive technical connection data such as your IP address. WhatsApp is an independent service. Review each provider’s current privacy information for its own processing.</p>],
+        ['Your requests and contact', <p>You may contact Tumpa Biswas at <a href="mailto:hello@stcraftcottage.com">hello@stcraftcottage.com</a> or call <a href="tel:+917003219312">+91 70032 19312</a> to request access, correction or deletion of information the shop controls, or to withdraw a request before sending it. You may also contact the shop on <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>. We will assess and respond to requests subject to applicable law. Withdrawal does not undo processing already completed or affect data held by WhatsApp.</p>]
+      ]
+    },
+    terms: {
+      icon: 'fa-file-lines',
+      title: 'Shopping Terms',
+      intro: 'Please review these current ordering details before sending an enquiry.',
+      sections: [
+        ['Seller and contact', <p>S.T. Craft Cottage is operated by Shamanto Roy and Tumpa Biswas as individuals, and is currently not a registered company. No GSTIN is currently provided on this website. Contact <a href="mailto:hello@stcraftcottage.com">hello@stcraftcottage.com</a> or <a href="tel:+917003219312">+91 70032 19312</a>. Address: 1/42A, Vivekananda Park, Pirpukur, Kolkata 700070.</p>],
+        ['Product details and prices', <p>Product images and descriptions are provided to help you choose; handmade items can have small variations. The amount shown in the basket is the items subtotal only. Delivery charges are not included. Applicable tax, final price, product availability and any product-specific details must be confirmed with the shop before payment. No payment is collected on this website.</p>],
+        ['Order requests and confirmation', <p>Sending a WhatsApp message is an enquiry/order request, not acceptance or confirmation of an order. The shop must confirm stock, delivery availability, charges and the final amount. An order is only confirmed after the shop has replied and you have agreed to the confirmed details.</p>],
+        ['Changes and cancellation', <p>Please request cancellation as soon as possible. A cancellation can be requested before preparation or making begins; once work has started, contact the shop to discuss what is possible. This does not limit rights that cannot be excluded under applicable law.</p>],
+        ['Customer responsibilities', <p>Please check product options, delivery address and phone number before sending your request. Keep payment details private and only pay using a method and amount confirmed directly with the shop.</p>],
+        ['Applicable rights', <p>These notes do not exclude or reduce any consumer or privacy rights that apply under law. If any term conflicts with a mandatory legal right, that legal right prevails.</p>]
+      ]
+    },
+    delivery: {
+      icon: 'fa-truck-fast',
+      title: 'Delivery, Cancellation & Returns',
+      intro: 'Delivery is currently arranged directly with the shop; confirm the details before paying.',
+      sections: [
+        ['Pickup and delivery', <p>Customer pickup can be arranged directly with the shop. The current local delivery area is Bansdroni, subject to confirmation. The shop and customer will agree delivery availability, timing and any delivery charge individually before an order is confirmed. Do not assume delivery outside this area is available.</p>],
+        ['Inspection on delivery', <p>For local delivery, you may open and inspect the package when it is handed over. If it appears damaged or contains the wrong item, tell the delivery person and contact the shop promptly with the order details and clear photos. If you discover an issue later or cannot inspect at delivery, contact the shop as soon as reasonably possible. The shop will review the issue and discuss an appropriate remedy, including replacement where available. This process does not remove any remedy required by law.</p>],
+        ['Change of mind and returns', <p>Because products are handmade and prepared in small quantities, the shop’s current policy is not to accept change-of-mind returns after an order is confirmed. This does not apply to a damaged, defective, incorrect or misdescribed item, and does not limit any return, refund or other right that cannot legally be excluded.</p>],
+        ['Cancellation', <p>You may request cancellation before preparation or making begins. Contact the shop promptly; a request is not complete until the shop confirms it. If work has already started, contact the shop to discuss available options and any rights under applicable law.</p>],
+        ['Before payment', <p>Wait for the shop to confirm item availability, delivery area, delivery charge, tax treatment and the final amount. No payment is taken through this website.</p>],
+        ['Contact', <p>For delivery or item issues, contact <a href="mailto:hello@stcraftcottage.com">hello@stcraftcottage.com</a>, call <a href="tel:+917003219312">+91 70032 19312</a>, or use the shop’s <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>. Include your name, order conversation details and photos where relevant.</p>]
+      ]
+    }
+  };
+  const page = pages[type] || pages.terms;
+  return (
+    <main className="policy-page">
+      <PageHeader icon={page.icon} title={page.title}>{page.intro}</PageHeader>
+      <section className="policy-content">
+        <div className="container">
+          <p className="policy-status"><i className="fas fa-circle-info" aria-hidden="true" /> Store information last reviewed November 16, 2026. These pages describe the current process; they are not a certification of legal compliance. Applicable law prevails.</p>
+          <article className="policy-card">
+            {page.sections.map(([heading, content]) => <section key={heading}><h2>{heading}</h2>{content}</section>)}
+          </article>
+          <p className="policy-related">Also see: <a href="privacy.html">Privacy Notice</a> · <a href="terms.html">Shopping Terms</a> · <a href="delivery-returns.html">Delivery, Cancellation & Returns</a></p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function Footer() {
+  const year = new Date().getFullYear();
   return (
     <footer className="footer">
-      <div className="container">
+      <div className="footer-wave" aria-hidden="true" />
+      <div className="container footer-container">
         <div className="footer-grid">
-          <div className="footer-brand"><h3><i className="fas fa-leaf" /> S.T. Craft Cottage</h3><p>Thoughtful handmade finds for puja, festivals, gifting and everyday moments.</p></div>
-          <div className="footer-links"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li><li><a href="cart.html">Cart</a></li><li><a href="contact.html">Contact</a></li></ul></div>
-          <div className="footer-links"><h4>Contact</h4><ul><li><a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer"><i className="fab fa-whatsapp" /> WhatsApp</a></li><li><a href="tel:+919674724587"><i className="fas fa-phone" /> +91 96747 24587</a></li><li><a href="tel:+917003219312"><i className="fas fa-phone" /> +91 70032 19312</a></li><li><a href="mailto:hello@stcraftcottage.com"><i className="fas fa-envelope" /> hello@stcraftcottage.com</a></li></ul></div>
+          <section className="footer-brand" aria-label="About S.T. Craft Cottage">
+            <a className="footer-brand-lockup" href="index.html" aria-label="S.T. Craft Cottage home">
+              <img src="assets/images/brand-logo.png" alt="" />
+              <span><strong>S.T. Craft Cottage</strong><em>Handmade with love ♡</em></span>
+            </a>
+            <p>Thoughtful handmade crafts, thoughtfully created with love and care.</p>
+            <a className="footer-whatsapp" href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-whatsapp" aria-hidden="true" /> Chat with us on WhatsApp
+            </a>
+          </section>
+          <nav className="footer-links" aria-label="Quick links">
+            <h2><i className="fas fa-leaf" aria-hidden="true" /> Quick Links</h2>
+            <ul>
+              <li><a href="index.html"><i className="fas fa-chevron-right" aria-hidden="true" /> Home</a></li>
+              <li><a href="products.html"><i className="fas fa-chevron-right" aria-hidden="true" /> Products</a></li>
+              <li><a href="products.html#collection-jewellery"><i className="fas fa-chevron-right" aria-hidden="true" /> Shop by Category</a></li>
+              <li><a href="index.html#our-promise"><i className="fas fa-chevron-right" aria-hidden="true" /> About Us</a></li>
+              <li><a href="contact.html"><i className="fas fa-chevron-right" aria-hidden="true" /> Contact</a></li>
+            </ul>
+          </nav>
+          <section className="footer-links footer-contact" aria-label="Contact information">
+            <h2><i className="fas fa-phone" aria-hidden="true" /> Contact Us</h2>
+            <ul>
+              <li><a href="tel:+919674724587"><i className="fas fa-phone" aria-hidden="true" /> +91 96747 24587</a></li>
+              <li><a href="tel:+917003219312"><i className="fas fa-phone" aria-hidden="true" /> +91 70032 19312</a></li>
+              <li><a href="mailto:hello@stcraftcottage.com"><i className="fas fa-envelope" aria-hidden="true" /> hello@stcraftcottage.com</a></li>
+              <li><span><i className="fas fa-location-dot" aria-hidden="true" /> 1/42A, Vivekananda Park, Pirpukur, Kolkata 700070</span></li>
+            </ul>
+          </section>
+          <div className="footer-craft" aria-label="Crafting happiness">
+            <div className="footer-craft-seal" aria-hidden="true">
+              <span className="footer-craft-spark footer-craft-spark-left">✦</span>
+              <i className="fas fa-heart" />
+              <span className="footer-craft-spark footer-craft-spark-right">✦</span>
+            </div>
+            <p>Made by hand,<br /><span>shared with heart.</span></p>
+            <div className="footer-craft-rule" aria-hidden="true"><i /><i /><i /></div>
+          </div>
         </div>
-        <div className="footer-bottom">&copy; 2026 S.T. Craft Cottage — Made with <i className="fas fa-heart" style={{ color: '#E8B84B' }} /> by hand.</div>
+        <div className="footer-bottom">
+          <p>© {year} S.T. Craft Cottage. All rights reserved.</p>
+          <span className="footer-bottom-heart" aria-hidden="true">♡</span>
+          <p>Craft · Create · Celebrate</p>
+          <p>Made with <i className="fas fa-heart" aria-hidden="true" /> in India</p>
+          <nav className="footer-legal-links" aria-label="Store policies">
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Shopping Terms</a>
+            <a href="delivery-returns.html">Delivery & Returns</a>
+          </nav>
+        </div>
       </div>
     </footer>
   );
