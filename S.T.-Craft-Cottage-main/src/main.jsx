@@ -141,25 +141,35 @@ function getRouteFromPath(pathname) {
   })[page] || 'home';
 }
 
-function animateProductToCart(sourceElement) {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
+async function animateProductToCart(sourceElement) {
   const sourceImage = sourceElement.closest('.product-card')?.querySelector('.product-image');
-  const targetSelector = window.innerWidth <= 900
-    ? '.mobile-cart-shortcut .nav-cart-icon'
-    : '.nav-links .nav-cart-link .nav-cart-icon';
-  const target = document.querySelector(targetSelector);
-  if (!sourceImage?.currentSrc || !target) return;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!sourceImage || prefersReducedMotion) return;
+
+  const flight = document.createElement('img');
+  flight.src = sourceImage.currentSrc || sourceImage.src;
+  flight.alt = '';
+  flight.setAttribute('aria-hidden', 'true');
+  flight.className = 'cart-flight-image';
+  try {
+    await flight.decode();
+  } catch (error) {
+    console.warn('Could not load the product image for the basket animation:', error);
+    return;
+  }
+  if (!sourceElement.isConnected) return;
+
+  const target = [...document.querySelectorAll('.mobile-cart-shortcut .nav-cart-icon, .nav-links .nav-cart-link .nav-cart-icon')]
+    .find(element => element.getClientRects().length > 0 && getComputedStyle(element).visibility !== 'hidden');
+  if (!target) return;
 
   const sourceBounds = sourceImage.getBoundingClientRect();
   const targetBounds = target.getBoundingClientRect();
   if (!sourceBounds.width || !sourceBounds.height || !targetBounds.width || !targetBounds.height) return;
 
-  const flight = document.createElement('img');
-  flight.src = sourceImage.currentSrc;
-  flight.alt = '';
-  flight.setAttribute('aria-hidden', 'true');
-  flight.className = 'cart-flight-image';
+  flight.style.transformOrigin = 'top left';
+  flight.style.objectFit = getComputedStyle(sourceImage).objectFit;
+  flight.style.borderRadius = getComputedStyle(sourceImage).borderRadius;
   flight.style.left = `${sourceBounds.left}px`;
   flight.style.top = `${sourceBounds.top}px`;
   flight.style.width = `${sourceBounds.width}px`;
@@ -169,11 +179,21 @@ function animateProductToCart(sourceElement) {
   const scale = Math.min(targetBounds.width / sourceBounds.width, targetBounds.height / sourceBounds.height, 0.45);
   const deltaX = targetBounds.left + targetBounds.width / 2 - sourceBounds.left - sourceBounds.width * scale / 2;
   const deltaY = targetBounds.top + targetBounds.height / 2 - sourceBounds.top - sourceBounds.height * scale / 2;
+  const controlX = deltaX * 0.52;
+  const controlY = deltaY * 0.52 - Math.min(42, Math.abs(deltaX) * 0.08);
   const animation = flight.animate([
-    { transform: 'translate(0, 0) scale(1)', opacity: 1, borderRadius: '12px' },
-    { transform: `translate(${deltaX}px, ${deltaY}px) scale(${scale})`, opacity: 0.35, borderRadius: '50%' }
-  ], { duration: 680, easing: 'cubic-bezier(0.22, 0.75, 0.2, 1)', fill: 'forwards' });
-  animation.onfinish = () => flight.remove();
+    { transform: 'translate(0, 0) scale(1) rotate(0deg)', opacity: 1, borderRadius: getComputedStyle(sourceImage).borderRadius, offset: 0 },
+    { transform: `translate(${controlX}px, ${controlY}px) scale(0.76) rotate(-5deg)`, opacity: 0.92, borderRadius: '24%', offset: 0.58 },
+    { transform: `translate(${deltaX}px, ${deltaY}px) scale(${scale}) rotate(0deg)`, opacity: 0.22, borderRadius: '50%', offset: 1 }
+  ], { duration: 620, easing: 'cubic-bezier(0.22, 0.75, 0.2, 1)', fill: 'forwards' });
+  animation.onfinish = () => {
+    flight.remove();
+    target.animate(
+      [{ transform: 'scale(1)' }, { transform: 'scale(1.2)' }, { transform: 'scale(1)' }],
+      { duration: 260, easing: 'cubic-bezier(0.2, 0.8, 0.25, 1)' }
+    );
+  };
+  animation.oncancel = () => flight.remove();
 }
 
 function App() {
@@ -311,8 +331,9 @@ function App() {
       return;
     }
     const phoneDigits = details.phone.replace(/\D/g, '');
-    if (!details.name.trim() || !details.address.trim() || phoneDigits.length < 7 || phoneDigits.length > 15) {
-      showToast('Enter your name, address, and a valid phone number (7–15 digits) before placing an order.', 'error', 4000);
+    const needsAddress = details.fulfillment !== 'pickup';
+    if (!details.name.trim() || (needsAddress && !details.address.trim()) || phoneDigits.length < 7 || phoneDigits.length > 15) {
+      showToast(`Please enter your name${needsAddress ? ' and delivery address' : ''}, plus a valid phone number (7–15 digits).`, 'error', 4000);
       return;
     }
 
@@ -323,7 +344,12 @@ function App() {
     }).format(amount);
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
     let message = `${SHOP_NAME}\nORDER REQUEST (NOT YET CONFIRMED)\n\n`;
-    message += `CUSTOMER DETAILS\nName: ${details.name.trim()}\nPhone: ${details.phone.trim()}\nAddress: ${details.address.trim()}\n`;
+    message += `CUSTOMER DETAILS\nName: ${details.name.trim()}\nPhone: ${details.phone.trim()}\n`;
+    if (needsAddress) {
+      message += `Fulfilment: Local delivery requested (availability and fee to be confirmed)\nAddress: ${details.address.trim()}\n`;
+    } else {
+      message += 'Fulfilment: Customer pickup requested (please confirm pickup details)\n';
+    }
     if (details.notes.trim()) message += `Notes: ${details.notes.trim()}\n`;
     message += '\nORDER ITEMS\n';
     cart.forEach((item, index) => {
@@ -336,8 +362,13 @@ function App() {
       message += `${index + 1}. ${itemName}\n   ${item.qty} x ${unitPrice} = ${lineTotal}\n`;
     });
     message += `\nITEMS SUBTOTAL: ${formatPrice(subtotal)}\n`;
-    message += 'Delivery fee: Not included; please confirm delivery availability and the fee for this address.\n';
-    message += '\nPlease confirm item availability, delivery fee, and the final amount before payment. This message is an order request, not a confirmed order.';
+    if (needsAddress) {
+      message += 'Delivery fee: Not included; please confirm delivery availability and the fee for this address.\n';
+      message += '\nPlease confirm item availability, delivery fee, and the final amount before payment. This message is an order request, not a confirmed order.';
+    } else {
+      message += 'Pickup arrangements: Please confirm pickup details with the shop.\n';
+      message += '\nPlease confirm item availability and the final amount before payment. This message is an order request, not a confirmed order.';
+    }
     return createWhatsAppDraft(message);
   }
 
@@ -771,7 +802,7 @@ function ProductsPage({ products, cart, addToCart, categories, activeFilter, set
 }
 
 function CartPage({ cart, removeFromCart, adjustCartItem, clearCart, placeOrder }) {
-  const [details, setDetails] = useState({ name: '', phone: '', address: '', notes: '' });
+  const [details, setDetails] = useState({ name: '', phone: '', address: '', notes: '', fulfillment: 'delivery' });
   const [whatsAppDraft, setWhatsAppDraft] = useState('');
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -780,15 +811,11 @@ function CartPage({ cart, removeFromCart, adjustCartItem, clearCart, placeOrder 
     <main className="cart-page">
       <section className="cart-hero">
         <div className="container cart-hero-inner">
-          <span className="cart-hero-sprig cart-hero-sprig-left" aria-hidden="true">❧</span>
-          <span className="cart-hero-note">Crafted with love <b>♡</b></span>
-          <span className="cart-hero-hearts" aria-hidden="true">♡　♡</span>
           <div className="cart-hero-title">
             <i className="fas fa-bag-shopping" aria-hidden="true" />
             <h1>Your Basket</h1>
           </div>
-          <p>Review your handmade finds before placing your order.</p>
-          <span className="cart-hero-sprig cart-hero-sprig-right" aria-hidden="true">❧</span>
+          <p>Review your items and send an order request to the shop.</p>
         </div>
       </section>
       <section className="cart-section">
@@ -848,13 +875,13 @@ function CartPage({ cart, removeFromCart, adjustCartItem, clearCart, placeOrder 
               </section>
 
               {cart.length > 0 && (
-                <section className="cart-delivery-card" aria-labelledby="delivery-heading">
-                  <header className="cart-delivery-heading">
-                    <span className="cart-delivery-icon"><i className="fas fa-truck-fast" aria-hidden="true" /></span>
-                    <div><h2 id="delivery-heading">Delivery details</h2><p>Tell us where to deliver</p></div>
-                    <span className="cart-delivery-sprig" aria-hidden="true">❧</span>
-                  </header>
-                  <div className="cart-delivery-fields">
+                <div className="cart-checkout-column">
+                  <section className="cart-delivery-card" aria-labelledby="delivery-heading">
+                    <header className="cart-delivery-heading">
+                      <span className="cart-delivery-icon"><i className="fas fa-truck-fast" aria-hidden="true" /></span>
+                      <div><h2 id="delivery-heading">Your details</h2><p>Choose pickup or local delivery</p></div>
+                    </header>
+                    <div className="cart-delivery-fields">
                     <div className="form-group cart-form-group">
                       <label htmlFor="orderName"><i className="fas fa-user" aria-hidden="true" /><span>Full Name <b>*</b></span></label>
                       <input id="orderName" name="name" autoComplete="name" maxLength="120" value={details.name} onChange={updateDetails} placeholder="Your Name" required />
@@ -863,36 +890,47 @@ function CartPage({ cart, removeFromCart, adjustCartItem, clearCart, placeOrder 
                       <label htmlFor="orderPhone"><i className="fas fa-phone" aria-hidden="true" /><span>Phone Number <b>*</b></span></label>
                       <input id="orderPhone" name="phone" type="tel" autoComplete="tel" pattern="[0-9 +()-]{7,20}" title="Enter a phone number with 7 to 20 digits, spaces, or +()- characters." value={details.phone} onChange={updateDetails} placeholder="WhatsApp Number" required />
                     </div>
+                    <fieldset className="fulfillment-choice">
+                      <legend>How would you like to receive your order?</legend>
+                      <label className={details.fulfillment === 'delivery' ? 'selected' : ''}>
+                        <input type="radio" name="fulfillment" value="delivery" checked={details.fulfillment === 'delivery'} onChange={updateDetails} />
+                        <i className="fas fa-truck-fast" aria-hidden="true" />
+                        <span><strong>Local delivery</strong><small>Bansdroni area; fee and availability confirmed in WhatsApp</small></span>
+                      </label>
+                      <label className={details.fulfillment === 'pickup' ? 'selected' : ''}>
+                        <input type="radio" name="fulfillment" value="pickup" checked={details.fulfillment === 'pickup'} onChange={updateDetails} />
+                        <i className="fas fa-store" aria-hidden="true" />
+                        <span><strong>Customer pickup</strong><small>Arrange pickup details with the shop</small></span>
+                      </label>
+                    </fieldset>
                     <div className="form-group cart-form-group">
-                      <label htmlFor="orderAddress"><i className="fas fa-house" aria-hidden="true" /><span>Full Delivery Address <b>*</b></span></label>
-                      <textarea id="orderAddress" name="address" autoComplete="street-address" maxLength="500" rows="2" value={details.address} onChange={updateDetails} placeholder="House No, Street, Landmark" required />
+                      <label htmlFor="orderAddress"><i className="fas fa-house" aria-hidden="true" /><span>{details.fulfillment === 'pickup' ? 'Address' : <>Full Delivery Address <b>*</b></>}</span></label>
+                      <textarea id="orderAddress" name="address" autoComplete="street-address" maxLength="500" rows="2" value={details.address} onChange={updateDetails} placeholder={details.fulfillment === 'pickup' ? 'Not needed for pickup' : 'House No, Street, Landmark'} required={details.fulfillment === 'delivery'} disabled={details.fulfillment === 'pickup'} />
                     </div>
                     <div className="form-group cart-form-group cart-notes-group">
                       <label htmlFor="orderNotes"><i className="fas fa-pen" aria-hidden="true" /><span>Special Instructions <small>(Optional)</small></span></label>
                       <input id="orderNotes" name="notes" value={details.notes} onChange={updateDetails} placeholder="Any gifting or delivery notes?" />
                     </div>
-                    <label className="policy-consent">
-                      <input type="checkbox" required />
-                      <span>I have read the <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Notice</a>. My details will only be shared with the shop if I review and send the WhatsApp message.</span>
-                    </label>
-                  </div>
-                </section>
+                      <label className="policy-consent">
+                        <input type="checkbox" required />
+                        <span>I have read the <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Notice</a>. My details will only be shared with the shop if I review and send the WhatsApp message.</span>
+                      </label>
+                    </div>
+                  </section>
+                  <aside className="cart-order-note">
+                    <i className="fas fa-circle-info" aria-hidden="true" />
+                    <div><strong>Order request only</strong><p>We’ll confirm availability and delivery charges before payment. Sending a WhatsApp draft does not place or confirm your order.</p></div>
+                  </aside>
+                  <section className="cart-total-card" aria-label="Order total">
+                    <div className="cart-total-amount"><span>Items subtotal</span><strong>{CURRENCY}{total}</strong><small>Delivery not included</small></div>
+                    <button className="cart-proceed-button" type="submit"><i className="fab fa-whatsapp" aria-hidden="true" /> Continue to WhatsApp <i className="fas fa-arrow-right" aria-hidden="true" /></button>
+                  </section>
+                </div>
               )}
             </div>
             {cart.length > 0 && (
               <>
-                <div className="cart-bottom-row">
-                  <aside className="cart-gift-note">
-                    <i className="fas fa-gift" aria-hidden="true" />
-                    <div><h2>Handmade Happiness Awaits!</h2><p>Complete your order and bring home something special. <span aria-hidden="true">♡</span></p></div>
-                    <span className="cart-gift-sprig" aria-hidden="true">❧</span>
-                  </aside>
-                  <section className="cart-total-card" aria-label="Order total">
-                    <div className="cart-total-amount"><span>Items subtotal</span><strong>{CURRENCY}{total}</strong></div>
-                    <button className="cart-proceed-button" type="submit"><i className="fas fa-lock" aria-hidden="true" /> Review order in WhatsApp <i className="fas fa-arrow-right" aria-hidden="true" /></button>
-                  </section>
-                </div>
-                <p className="delivery-note">This subtotal covers items only; delivery fees are not included. The shop will confirm availability, delivery charges and the final order total in WhatsApp. No payment is taken on this page.</p>
+                <p className="delivery-note">No payment is collected on this page. The shop will confirm availability, delivery or pickup details, applicable charges and the final amount in WhatsApp.</p>
                 {whatsAppDraft && <p className="whatsapp-draft-link" role="status">Your order draft is ready but not sent. <a href={whatsAppDraft} target="_blank" rel="noopener noreferrer">Open it in WhatsApp</a>, review it and tap Send.</p>}
               </>
             )}
